@@ -78,8 +78,8 @@ fi
 
 # If there is a host definition file, source it
 # We always expect it one directory above this repository
-if [[ -f "${SCRIPT_DIR}/../host.sh" ]]; then
-    source "${SCRIPT_DIR}/../host.sh"
+if [[ -f "${SCRIPT_DIR}/../../host.sh" ]]; then
+    source "${SCRIPT_DIR}/../../host.sh"
 fi
 
 # Set up Xilinx tools

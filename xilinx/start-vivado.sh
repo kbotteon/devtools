@@ -6,8 +6,8 @@ SCRIPT_DIR=$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")
 # In this script, if any one step fails, we cannot continue
 set -e
 
-# We need a host.sh file to describe the host configuration
-source ${SCRIPT_DIR}/../host.sh
+source ${DEVTOOLS_DIR}/bash/helpers.sh
+check_env XILINX_LICENSE_PATH XILINX_ROOT XILINX_VERSION
 
 # Borrow the user's home directory for Vivado to drop logs into
 mkdir -p ${TMP_DIR} && cd ${TMP_DIR}
