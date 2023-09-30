@@ -37,11 +37,16 @@ PS1_PROMPT="\u@${CLR_RED}\h${CLR_END}:\w"
 # If a colorization and/or format for Git exists, locate it
 GIT_PROMPT_LOC_1='/usr/lib/git-core/git-sh-prompt'
 GIT_PROMPT_LOC_2="${SCRIPT_DIR}/git-sh-prompt"
+if command -v brew &>/dev/null; then
+    GIT_PROMPT_LOC_3="`brew --prefix git`/etc/bash_completion.d/git-prompt.sh"
+fi
 
 if [ -f ${GIT_PROMPT_LOC_1} ]; then
     GIT_PROMPT=${GIT_PROMPT_LOC_1}
 elif [ -f ${GIT_PROMPT_LOC_2} ]; then
     GIT_PROMPT=${GIT_PROMPT_LOC_2}
+elif [ -f ${GIT_PROMPT_LOC_3} ]; then
+    GIT_PROMPT=${GIT_PROMPT_LOC_3}
 fi
 
 # If we could find a Git prompt setup script, source it and update our PS1
