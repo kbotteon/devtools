@@ -44,10 +44,7 @@
                 "editor.renderWhitespace": "all",
                 "files.trimTrailingWhitespace": true,
                 "files.insertFinalNewline": true
-            },
-            "extensions": [
-                "GitHub.vscode-pull-request-github"
-            ]
+            }
         }
     }
 
