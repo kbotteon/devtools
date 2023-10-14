@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+################################################################################
+# Starts Vivado using configuration in host.sh
+################################################################################
 
 TMP_DIR="${HOME}/.Vivado"
 SCRIPT_DIR=$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")

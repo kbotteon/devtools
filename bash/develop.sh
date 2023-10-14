@@ -1,6 +1,11 @@
 #!/usr/bin/env bash -n
 ################################################################################
 # Development Environment Setup
+#
+# Steps:
+#   - Set up ssh-agent and key(s) if requested
+#   - Reformat terminal colors and layout, including adding git status
+#   - Run user environment script, if it exists
 ################################################################################
 
 STARTING_DIR=$(pwd)
@@ -78,8 +83,8 @@ fi
 
 # If there is a host definition file, source it
 # We always expect it one directory above this repository
-if [[ -f "${SCRIPT_DIR}/../../host.sh" ]]; then
-    source "${SCRIPT_DIR}/../../host.sh"
+if [[ -f "${HOME}/.devtools-config" ]]; then
+    source "${HOME}/.devtools-config"
 fi
 
 # Set up Xilinx tools

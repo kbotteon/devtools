@@ -1,0 +1,14 @@
+# Example devtools-config.sh
+# Put a copy of this, updated with your environment, in ${HOME}
+
+export DEVTOOLS_DIR='/home/developer/sandboxes/devtools'
+
+# Set this if you have a license server or file
+unset XILINX_LICENSE_PATH
+# Points to the root of the Xilinx tools, containing Vivado/, Vitis/, etc.
+export XILINX_ROOT='/share/tools'
+# Selects which Xilinx version to use, in case there are multiple
+export XILINX_VERSION='2022.2'
+
+# Set this if there's another script you want develop.sh to run
+unset USER_ENV_SCRIPT

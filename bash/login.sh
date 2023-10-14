@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+################################################################################
+# Runs login scripts saved in ${HOME}/.login
+################################################################################
 
 # Don't try to run login scripts in non-login shells, like screens
 if shopt -q login_shell; then
@@ -8,4 +11,3 @@ if shopt -q login_shell; then
         [ -f "$script" ] && [ -x "$script" ] && "$script"
     done
 fi
-
