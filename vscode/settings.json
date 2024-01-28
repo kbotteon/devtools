@@ -1,0 +1,163 @@
+{
+  //
+  // Telemetry
+  //
+
+  "telemetry.telemetryLevel": "off",
+
+  //
+  // Git
+  //
+
+  "git.autofetch": false,
+  "git.autorefresh": false,
+  "git.enabled": true,
+
+  //
+  // Explorer and Files
+  //
+
+  "explorer.openEditors.visible" : 0,
+  "explorer.confirmDelete": true,
+  "explorer.confirmDragAndDrop": true,
+
+  "files.trimFinalNewlines": true,
+  "files.associations": {
+    "*.svh": "systemverilog"
+  },
+
+  //
+  // Editor
+  //
+
+  "workbench.colorTheme": "Monokai",
+  "workbench.colorCustomizations": {
+    "editor.selectionBackground": "#F000FF80",
+    "editor.selectionHighlightBackground": "#FF0000A0", // Selection occurences
+    "editor.lineHighlightBackground":"#F000FF40", // Highlight active line
+    "editorWarning.foreground": "#FFAA00",
+    "editorInfo.foreground": "#88ff00",
+    "editorOverviewRuler.infoForeground": "#00000000"
+  },
+  "workbench.iconTheme": "vscode-icons",
+  "workbench.editor.tabCloseButton": "off",
+  "editor.tabSize": 4,
+  "editor.rulers": [80, 100],
+  "editor.mouseWheelZoom": false,
+  "editor.acceptSuggestionOnEnter": "off",
+  "editor.scrollbar.verticalScrollbarSize": 20,
+  "editor.minimap.size": "proportional",
+  "editor.minimap.showSlider": "always",
+  "editor.minimap.scale": 2,
+  "editor.occurrencesHighlight": true,
+  "editor.tokenColorCustomizations": {
+    "[Monokai]": {
+      "comments":"#b4b4b4"
+    }
+  },
+
+  "diffEditor.maxComputationTime": 0,
+  "diffEditor.ignoreTrimWhitespace": false,
+
+  "breadcrumbs.enabled": true,
+
+  //
+  // Application Window
+  //
+
+  "window.restoreWindows" : "all",
+  "window.restoreFullscreen" : true,
+  "window.zoomLevel": 0,
+  "window.title": "${dirty} [${folderName}] ${activeFolderLong}",
+
+  "zenMode.centerLayout": false,
+
+  "terminal.integrated.fontSize": 14,
+
+  //
+  // Extensions
+  //
+
+  "extensions.ignoreRecommendations": true,
+
+  //
+  // Extension: Git Lens
+  //
+
+  "gitlens.hovers.currentLine.over": "line",
+  "gitlens.codeLens.enabled": false,
+  "gitlens.keymap": "none",
+  "gitlens.advanced.messages": {
+    "suppressGitVersionWarning": true
+  },
+
+  //
+  // Extension: Spell Checker
+  //
+
+  "cSpell.language": "en",
+  "cSpell.enabledLanguageIds": [
+    "c",
+    "cpp",
+    "csharp",
+    "go",
+    "handlebars",
+    "javascript",
+    "javascriptreact",
+    "json",
+    "latex",
+    "markdown",
+    "php",
+    "plaintext",
+    "python",
+    "restructuredtext",
+    "text",
+    "typescript",
+    "typescriptreact",
+    "verilog",
+    "systemverilog",
+    "yml",
+    "asciidoc"
+  ],
+
+  "cSpell.languageSettings": [
+    { "languageId": "verilog", "allowCompoundWords": false,  "dictionaries": ["verilog"]},
+    { "languageId": "systemverilog", "allowCompoundWords": false,  "dictionaries": ["verilog"]}
+  ],
+
+  "cSpell.dictionaryDefinitions": [
+    { "name": "verilog", "path": "~/cSpellVerilog.txt"}
+  ],
+
+  "cSpell.diagnosticLevel": "Information",
+
+  //
+  // Extension: Remote SSH
+  //
+
+  "remote.SSH.remotePlatform": {
+    "psychic-space-goggle": "linux"
+  },
+
+  "remote.SSH.maxReconnectionAttempts": 0,
+  "remote.SSH.showLoginTerminal": true,
+
+  //
+  // Extension: C/C++
+  //
+
+  "C_Cpp.intelliSenseEngine": "Tag Parser",
+  "C_Cpp.formatting": "disabled",
+  "C_Cpp.enhancedColorization": "disabled",
+  "editor.renderWhitespace": "all",
+  "editor.fontSize": 13,
+  "asciidoc.preview.useEditorStyle": false,
+  "hediet.vscode-drawio.resizeImages": null,
+  "hediet.vscode-drawio.theme": "atlas"
+
+  //
+  // Anything below this line was automatically
+  // added by the editor
+  //
+
+}

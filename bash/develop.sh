@@ -40,11 +40,14 @@ PS1_TITLE='\[\e]0;\u@\h:\w\a\]'
 PS1_PROMPT="\u@${CLR_RED}\h${CLR_END}:\w"
 
 # If a colorization and/or format for Git exists, locate it
+# Default Linux location
 GIT_PROMPT_LOC_1='/usr/lib/git-core/git-sh-prompt'
-GIT_PROMPT_LOC_2="${SCRIPT_DIR}/git-sh-prompt"
+# Default Mac location
 if command -v brew &>/dev/null; then
-    GIT_PROMPT_LOC_3="`brew --prefix git`/etc/bash_completion.d/git-prompt.sh"
+    GIT_PROMPT_LOC_2="`brew --prefix git`/etc/bash_completion.d/git-prompt.sh"
 fi
+# Otherwise, use the one bundled here
+GIT_PROMPT_LOC_3="${SCRIPT_DIR}/git-sh-prompt"
 
 if [ -f ${GIT_PROMPT_LOC_1} ]; then
     GIT_PROMPT=${GIT_PROMPT_LOC_1}
@@ -71,7 +74,7 @@ fi
 # Start ssh-agent and add a key to avoid re-typing passwords for this session,
 # which can happen a lot since folks use Git submodules so much
 if [[ '-key' = ${SCRIPT_ARG1} ]]; then
-    . ${SCRIPT_DIR}/lib/github-agent-helper.sh
+    source ${SCRIPT_DIR}/lib/github-agent-helper.sh
     echo "Agent in use is PID ${SSH_AGENT_PID}"
     # Stop ssh-agent we started in this shell when exiting or SSH disconnects
     trap 'test -n "${SSH_AGENT_PID}" && eval `ssh-agent -k`' EXIT HUP
@@ -87,15 +90,13 @@ if [[ -f "${HOME}/.devtools-config" ]]; then
     source "${HOME}/.devtools-config"
 fi
 
-# Set up Xilinx tools
-if [[ -n ${XILINX_ROOT} ]] && [[ -n ${XILINX_VERSION} ]]; then
+# Set up Xilinx tools, if the roots were defined
+if [[ -n ${DTC_XILINX_ROOT} ]] && [[ -n ${DTC_XILINX_VERSION} ]]; then
     export VITIS_ROOT=${XILINX_ROOT}/Vitis/${XILINX_VERSION}
-    export MB_BIN_DIR=${VITIS_ROOT}/gnu/microblaze/lin/bin
-    export PATH=${PATH}:${MB_BIN_DIR}
+    export MICROBLAZE_BIN_DIR=${VITIS_ROOT}/gnu/microblaze/lin/bin
     # Do **NOT** put all Xilinx tools on path by default because, for
     # example, there is an old CMake included for Vivado that will cause
     # problems with your other build systems
-    # Skip this: source ${XILINX_ROOT}/Vivado/${XILINX_VERSION}/settings64.sh
 fi
 
 # Add user Python installs to path, if they exist
@@ -104,9 +105,16 @@ if [ -f ${HOME}/.local/bin ]; then
 fi
 
 # Run the user environment configuration, if it exists
-if [[ -f ${USER_ENV_SCRIPT} ]]; then
-    source ${USER_ENV_SCRIPT}
+if [[ -f ${DTC_USER_ENV_SCRIPT} ]]; then
+    source ${DTC_USER_ENV_SCRIPT}
 fi
+
+# Share a history file across all active Bash sessions using this script, and
+# update it in realtime
+HISTFILE=${HOME}/.devtools-history
+HISTSIZE=5000
+shopt -s histappend
+# PROMPT_COMMAND="history -a; ${PROMPT_COMMAND}"
 
 ################################################################################
 

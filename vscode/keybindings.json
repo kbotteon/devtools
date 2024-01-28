@@ -1,0 +1,39 @@
+// Place your key bindings in this file to override the defaults
+[
+
+    {
+        "key": "ctrl+tab",
+        "command":"workbench.action.nextEditor"
+    },
+
+    {
+        "key": "ctrl+shift+tab",
+        "command":"workbench.action.previousEditor"
+    },
+    {
+        "key": "alt+right",
+        "command": "-gitlens.key.alt+right",
+        "when": "gitlens:key:alt+right"
+    },
+    {
+        "key": "alt+a",
+        "command": "workbench.action.navigateBack",
+        "when": "canNavigateBack"
+    },
+    {
+        "key": "ctrl+-",
+        "command": "-workbench.action.navigateBack",
+        "when": "canNavigateBack"
+    },
+    {
+        "key": "alt+s",
+        "command": "workbench.action.navigateForward",
+        "when": "canNavigateForward"
+    },
+    {
+        "key": "ctrl+shift+-",
+        "command": "-workbench.action.navigateForward",
+        "when": "canNavigateForward"
+    }
+
+]
