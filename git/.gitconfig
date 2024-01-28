@@ -1,0 +1,27 @@
+# This .gitconfig can be `include`d in your global configuration file, either
+# first or last depending on which way you'd like to override preferences, via
+#
+# [include]
+#     path = /path/to/devtools/git/.gitconfig
+
+[init]
+
+    defaultBranch = devel
+
+[core]
+
+    autocrlf = input
+    editor = vim
+
+[pull]
+
+    ff = only
+    rebase = false
+
+[submodule]
+
+    recurse = true
+
+[alias]
+
+    trail = log --oneline --decorate --stat --graph

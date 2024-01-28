@@ -4,7 +4,7 @@ alias ll='ls -lha'
 alias cp-ri='rsync -av --progress --append-verify --partial'
 
 # Make running single Java files easier
-# Usage: `jdo MyFile.`
+# Usage: `jdo MyFile.` or `jdo MyFile`
 # Expands to `javac MyFile.class && java MyFile`
 jdo() {
     FILE="$1"
