@@ -15,5 +15,8 @@ source ${SCRIPT_DIR}/../get/vivado.sh
 # packaged with Vivado, but the get script already warned the user
 source ${DTC_XILINX_ROOT}/Vivado/${DTC_XILINX_VERSION}/settings64.sh
 
+# Announce where we are
+echo "!!! Working in $(pwd)"
+
 # Launch in the foreground so we don't try to re-use the shell
 vivado

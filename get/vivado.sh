@@ -5,6 +5,7 @@
 
 TMP_DIR="${HOME}/.Vivado"
 SCRIPT_DIR=$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")
+CURRENT_DIR=$(pwd)
 
 # Require the devtools helpers
 if [ -z "${DEVTOOLS_DIR}" ]; then
@@ -32,4 +33,10 @@ printf "!!!\r\n"
 printf "!!! Vivado tools are on PATH; only use this shell for Vivado\r\n"
 printf "!!!\r\n"
 
+# Grab the Xilinx paths
 source ${DTC_XILINX_ROOT}/Vivado/${DTC_XILINX_VERSION}/settings64.sh
+
+# If launched from devtools, get out of here before Vivado drops 100 logs
+if [[ "${CURRENT_DIR}" == "${DEVTOOLS_DIR}"* ]]; then
+    cd ${TMP_DIR}
+fi
