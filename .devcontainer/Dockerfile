@@ -1,15 +1,11 @@
 FROM ubuntu:20.04
 
-RUN dpkg --add-architecture i386
-
 RUN \
-    apt-get update \
-    && apt-get upgrade -y
+    dpkg --add-architecture i386
 
 # Install basic build tools
 RUN \
     apt-get update \
-    && apt-get upgrade -y \
     && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
         make \
         unzip \
@@ -21,5 +17,15 @@ RUN \
         clang \
         gdb \
         python3-dev
+
+# Add in the graphical stuff
+RUN \
+    apt-get update \
+    && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        tigervnc-common \
+        tigervnc-standalone-server \
+        xfce4 \
+        xfce4-terminal \
+        dbus-x11
 
 ENV SHELL=/bin/bash

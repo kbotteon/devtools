@@ -46,6 +46,9 @@
                 "files.insertFinalNewline": true
             }
         }
-    }
+    },
+
+    // Run any lingering setup that we couldn't do in the Dockerfile
+    "postCreateCommand": ".devcontainer/final.sh"
 
 }
