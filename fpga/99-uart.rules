@@ -1,0 +1,17 @@
+# \brief udev rules for FPGA UARTs
+#
+# To figure out your device parameters:
+#   1. Run udevadm monitor --environment --udev
+#   2. Un/plug the device
+#   3. If that didn't display enough info to write a rule:
+#        udevadm info --name=/dev/ttyUSBx --attribute-walk
+#
+
+# Some board mux multiple UARTs over the same USB-UART chip, and you'll need a
+# rule for each; check INTERFACE_NUM to differentiate
+SUBSYSTEM=="tty", ENV{ID_MODEL}=="CP2105_Dual_USB_to_UART_Bridge_Controller", ENV{ID_USB_INTERFACE_NUM}=="00", ENV{ID_SERIAL_SHORT}=="DEADC0DE", SYMLINK+="kcu-zynq"
+SUBSYSTEM=="tty", ENV{ID_MODEL}=="CP2105_Dual_USB_to_UART_Bridge_Controller", ENV{ID_USB_INTERFACE_NUM}=="01", ENV{ID_SERIAL_SHORT}=="DEADC0DE", SYMLINK+="kcu-kintex"
+
+# UART cables are handy too, but hard to keep track of if you have more than 1!
+SUBSYSTEM=="tty", ENV{ID_MODEL}=="TTL232R-3V3", ENV{ID_SERIAL_SHORT}=="DEADC0DE", SYMLINK+="usb-uart1"
+SUBSYSTEM=="tty", ENV{ID_MODEL}=="TTL232R-3V3", ENV{ID_SERIAL_SHORT}=="DEADC1DE", SYMLINK+="usb-uart2"
