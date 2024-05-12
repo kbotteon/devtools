@@ -1,0 +1,14 @@
+#!/usr/bin/env false
+################################################################################
+# You can include short names for hosts here and share it among multiple
+# machines with devtools clones
+#
+# To do so, add to your .ssh/config:
+#   Include /path/to/devtools/ssh/dev
+################################################################################
+
+Host fpgabox01
+    HostName 192.168.2.101
+    User developer
+    IdentityFile ~/.ssh/id_developer
+    LocalForward 5910 localhost:5910
