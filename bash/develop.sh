@@ -1,11 +1,15 @@
 #!/usr/bin/env bash -n
 ################################################################################
-# Development Environment Setup
+# \brief Set up a consistent development environment
 #
-# Steps:
+# Arguments:
+#   `-key` to set up ssh-agent with your SSH keys, e.g. for easy GitHub access
+#
+# This script will:
 #   - Set up ssh-agent and key(s) if requested
 #   - Reformat terminal colors and layout, including adding git status
 #   - Run user environment script, if it exists
+#
 ################################################################################
 
 STARTING_DIR=$(pwd)
@@ -39,27 +43,23 @@ CLR_END='\[\033[00m\]'
 PS1_TITLE='\[\e]0;\u@\h:\w\a\]'
 PS1_PROMPT="\u@${CLR_RED}\h${CLR_END}:\w"
 
-# If a colorization and/or format for Git exists, locate it
+# If the script to format the prompt with git info exists, locate it
 # Default Linux location
 GIT_PROMPT_LOC_1='/usr/lib/git-core/git-sh-prompt'
-# Default Mac location
+# Default Mac location if using HomeBrew
 if command -v brew &>/dev/null; then
     GIT_PROMPT_LOC_2="`brew --prefix git`/etc/bash_completion.d/git-prompt.sh"
 fi
-# Otherwise, use the one bundled here
-GIT_PROMPT_LOC_3="${SCRIPT_DIR}/git-sh-prompt"
 
 if [ -f ${GIT_PROMPT_LOC_1} ]; then
     GIT_PROMPT=${GIT_PROMPT_LOC_1}
 elif [ -f ${GIT_PROMPT_LOC_2} ]; then
     GIT_PROMPT=${GIT_PROMPT_LOC_2}
-elif [ -f ${GIT_PROMPT_LOC_3} ]; then
-    GIT_PROMPT=${GIT_PROMPT_LOC_3}
 fi
 
 # If we could find a Git prompt setup script, source it and update our PS1
 if [[ -n ${GIT_PROMPT} ]]; then
-    source $GIT_PROMPT
+    source ${GIT_PROMPT}
     # Add Git status to the command line
     export PS1="${PS1_TITLE}${PS1_PROMPT} ${CLR_RED}\$(__git_ps1 '(%s)')${CLR_END}\n└──> "
 # Otherwise use the default PS1
@@ -81,11 +81,36 @@ if [[ '-key' = ${SCRIPT_ARG1} ]]; then
 fi
 
 ################################################################################
+# Shell Config
+################################################################################
+
+# Share a history file across all active Bash sessions using this script
+HISTFILE=${HOME}/.devtools-history
+# Keep a long history; sometimes we need that obscure command from last month
+HISTSIZE=5000
+shopt -s histappend
+# Optionally, write history after every command so other shells can access it
+if [[ -n ${DTC_SHARE_HISTORY} ]]; then
+    PROMPT_COMMAND="history -a; ${PROMPT_COMMAND}"
+fi
+
+# Don't try to run login scripts in non-login shells, like screens
+if [[ -n ${DTC_RUN_LOGIN} ]]; then
+    if shopt -q login_shell; then
+        # Collect the scripts in .login
+        for script in ${HOME}/.login/*.sh; do
+            # Run only executable files
+            [ -f "${script}" ] && [ -x "${script}" ] && "${script}"
+        done
+    fi
+fi
+
+################################################################################
 # Host Setup
 ################################################################################
 
 # If there is a host definition file, source it
-# We always expect it one directory above this repository
+# We always expect it to be in a user's home directory
 if [[ -f "${HOME}/.devtools-config" ]]; then
     source "${HOME}/.devtools-config"
 fi
@@ -108,13 +133,6 @@ fi
 if [[ -f ${DTC_USER_ENV_SCRIPT} ]]; then
     source ${DTC_USER_ENV_SCRIPT}
 fi
-
-# Share a history file across all active Bash sessions using this script, and
-# update it in realtime
-HISTFILE=${HOME}/.devtools-history
-HISTSIZE=5000
-shopt -s histappend
-# PROMPT_COMMAND="history -a; ${PROMPT_COMMAND}"
 
 ################################################################################
 
