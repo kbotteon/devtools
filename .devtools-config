@@ -1,0 +1,25 @@
+# Example .devtools-config
+# Update this to match your environment then put it in ${HOME}
+
+# You can put this in your .bashrc, or you can just source this file
+export DTC_EXISTS='/home/developer/sandboxes/devtools'
+# Backwards compatability
+export DEVTOOLS_DIR='/home/developer/sandboxes/devtools'
+
+# Set this if you want Bash to write to the history file after *every* command
+# so other shells have immediate access via Ctrl+R
+unset DTC_SHARE_HISTORY
+
+# Set this if you have login scripts in ${HOME}/.login to automatically run
+unset DTC_RUN_LOGIN
+
+# Set this if you have a license server or file to provide to the tools
+unset DTC_XILINX_LICENSE_PATH
+# Points to the root of the Xilinx tools, containing Vivado/, Vitis/, etc.
+export DTC_XILINX_ROOT='/share/tools'
+# Selects which Xilinx version to use, in case there are multiple
+export DTC_XILINX_VERSION='2022.2'
+
+# Set this if there's another script you want develop.sh to run
+# Or you can put whatever that is in this file
+unset USER_ENV_SCRIPT
