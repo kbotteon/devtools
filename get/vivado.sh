@@ -36,5 +36,8 @@ printf "!!!\r\n"
 printf "!!! Vivado tools are on PATH; only use this shell for Vivado\r\n"
 printf "!!!\r\n"
 
+# No, but really only use it for Vivado
+export PS1="${CLR_RED}Vivado Toolpath > ${CLR_END}"
+
 # Grab the Xilinx tools
 source ${DTC_XILINX_ROOT}/Vivado/${DTC_XILINX_VERSION}/settings64.sh
