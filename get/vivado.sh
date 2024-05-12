@@ -8,7 +8,7 @@ SCRIPT_DIR=$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")
 CURRENT_DIR=$(pwd)
 
 # Require devtools
-if [ -z "${DTC_EXITS}" ]; then
+if [ -z "${DTC_EXISTS}" ]; then
     echo "You must first source develop.sh"
     exit 1
 else
