@@ -1,0 +1,45 @@
+# Auto detect text files and perform LF normalization
+* text=auto
+
+# Custom for Visual Studio
+*.cs     diff=csharp
+
+# Standard to msysgit
+*.doc	 diff=astextplain
+*.DOC	 diff=astextplain
+*.docx diff=astextplain
+*.DOCX diff=astextplain
+*.dot  diff=astextplain
+*.DOT  diff=astextplain
+*.pdf  diff=astextplain
+*.PDF	 diff=astextplain
+*.rtf	 diff=astextplain
+*.RTF	 diff=astextplain
+
+# FPGA tool files using LF on all platforms
+# Preserve tool/binary formats
+*.ncd   binary
+*.xise  binary
+*.bld   binary
+*.ncd   binary
+*.ngc   binary
+*.ngd   binary
+*.ngr   binary
+*.bit   binary
+*.xmsgs binary
+*.xrpt  binary
+*.xaw   binary
+
+# FPGA tool text files also use LF on all platforms
+# Low consequence if these are missed.
+*.bgn   binary
+*.drc   binary
+*.pad   binary
+*.par   binary
+*.ptwx  binary
+*.syr   binary
+*.twx   binary
+*.unroutes binary
+*.map   binary
+*.mrp   binary
+*.ngm   binary
