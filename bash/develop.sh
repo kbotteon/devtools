@@ -85,7 +85,7 @@ fi
 ################################################################################
 
 # Share a history file across all active Bash sessions using this script
-HISTFILE=${HOME}/.devtools-history
+HISTFILE=${HOME}/.config/devtools/history
 # Keep a long history; sometimes we need that obscure command from last month
 HISTSIZE=5000
 shopt -s histappend
@@ -111,8 +111,8 @@ fi
 
 # If there is a host definition file, source it
 # We always expect it to be in a user's home directory
-if [[ -f "${HOME}/.devtools-config" ]]; then
-    source "${HOME}/.devtools-config"
+if [[ -f "${HOME}/.config/devtools/config" ]]; then
+    source "${HOME}/.config/devtools/config"
 fi
 
 # Set up Xilinx tools, if the roots were defined
