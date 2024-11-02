@@ -1,14 +1,14 @@
-# Example .devtools-config
+################################################################################
+# \brief Example devtools config file
+#
 # Update this to match your environment then put it in ${HOME}
+################################################################################
 
-# You can put this in your .bashrc, or you can just source this file
 export DTC_EXISTS='/home/developer/sandboxes/devtools'
-# Backwards compatability
-export DEVTOOLS_DIR='/home/developer/sandboxes/devtools'
 
 # Set this if you want Bash to write to the history file after *every* command
 # so other shells have immediate access via Ctrl+R
-unset DTC_SHARE_HISTORY
+set DTC_SHARE_HISTORY
 
 # Set this if you have login scripts in ${HOME}/.login to automatically run
 unset DTC_RUN_LOGIN

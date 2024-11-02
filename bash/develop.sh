@@ -15,6 +15,11 @@
 STARTING_DIR=$(pwd)
 SCRIPT_DIR=$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")
 
+if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
+    echo "This script should be sourced, not executed"
+    exit 1
+fi
+
 ################################################################################
 # Parse Arguments
 #
@@ -44,17 +49,21 @@ PS1_TITLE='\[\e]0;\u@\h:\w\a\]'
 PS1_PROMPT="\u@${CLR_RED}\h${CLR_END}:\w"
 
 # If the script to format the prompt with git info exists, locate it
-# Default Linux location
+# Generic Linux
 GIT_PROMPT_LOC_1='/usr/lib/git-core/git-sh-prompt'
-# Default Mac location if using HomeBrew
+# Mac/HomeBrew
 if command -v brew &>/dev/null; then
     GIT_PROMPT_LOC_2="`brew --prefix git`/etc/bash_completion.d/git-prompt.sh"
 fi
+# RHEL
+GIT_PROMPT_LOC_3='/usr/share/git-core/contrib/completion/git-prompt.sh'
 
 if [ -f ${GIT_PROMPT_LOC_1} ]; then
     GIT_PROMPT=${GIT_PROMPT_LOC_1}
 elif [ -f ${GIT_PROMPT_LOC_2} ]; then
     GIT_PROMPT=${GIT_PROMPT_LOC_2}
+elif [ -f ${GIT_PROMPT_LOC_3} ]; then
+    GIT_PROMPT=${GIT_PROMPT_LOC_3}
 fi
 
 # If we could find a Git prompt setup script, source it and update our PS1
@@ -94,13 +103,13 @@ if [[ -n ${DTC_SHARE_HISTORY} ]]; then
     PROMPT_COMMAND="history -a; ${PROMPT_COMMAND}"
 fi
 
-# Don't try to run login scripts in non-login shells, like screens
+# Run login scripts, if it's a login shell
 if [[ -n ${DTC_RUN_LOGIN} ]]; then
     if shopt -q login_shell; then
         # Collect the scripts in .login
-        for script in ${HOME}/.login/*.sh; do
+        for SCRIPT in ${HOME}/.login/*.sh; do
             # Run only executable files
-            [ -f "${script}" ] && [ -x "${script}" ] && "${script}"
+            [ -f "${SCRIPT}" ] && [ -x "${SCRIPT}" ] && "${SCRIPT}"
         done
     fi
 fi
@@ -117,8 +126,8 @@ fi
 
 # Set up Xilinx tools, if the roots were defined
 if [[ -n ${DTC_XILINX_ROOT} ]] && [[ -n ${DTC_XILINX_VERSION} ]]; then
-    export VITIS_ROOT=${XILINX_ROOT}/Vitis/${XILINX_VERSION}
-    export MICROBLAZE_BIN_DIR=${VITIS_ROOT}/gnu/microblaze/lin/bin
+    export VITIS_ROOT=${DTC_XILINX_ROOT}/Vitis/${DTC_XILINX_VERSION}
+    export MICROBLAZE_BIN_DIR=${DTC_VITIS_ROOT}/gnu/microblaze/lin/bin
     # Do **NOT** put all Xilinx tools on path by default because, for
     # example, there is an old CMake included for Vivado that will cause
     # problems with your other build systems
