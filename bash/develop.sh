@@ -94,12 +94,15 @@ fi
 ################################################################################
 
 # Share a history file across all active Bash sessions using this script
-HISTFILE=${HOME}/.config/devtools/history
+export HISTFILE=${HOME}/.config/devtools/history
+
 # Keep a long history; sometimes we need that obscure command from last month
 if [[ "${DTC_HISTSIZE}" -gt 0 ]]; then
-    HISTSIZE="${DTC_HISTSIZE}"
+    export HISTSIZE="${DTC_HISTSIZE}"
+    export HISTFILESIZE=${HISTSIZE}
 else
-    HISTSIZE=1000
+    export HISTSIZE=1000
+    export HISTFILESIZE=${HISTSIZE}
 fi
 
 shopt -s histappend
