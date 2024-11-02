@@ -83,7 +83,7 @@ fi
 # Start ssh-agent and add a key to avoid re-typing passwords for this session,
 # which can happen a lot since folks use Git submodules so much
 if [[ '-key' = ${SCRIPT_ARG1} ]]; then
-    source ${SCRIPT_DIR}/lib/github-agent-helper.sh
+    source ${SCRIPT_DIR}/../lib/agent-helper.sh
     echo "Agent in use is PID ${SSH_AGENT_PID}"
     # Stop ssh-agent we started in this shell when exiting or SSH disconnects
     trap 'test -n "${SSH_AGENT_PID}" && eval `ssh-agent -k`' EXIT HUP

@@ -7,7 +7,7 @@
 SSH_ENV="${HOME}/.ssh/agent.env"
 
 agent_load_env() { test -f "${SSH_ENV}" && . "${SSH_ENV}" > /dev/null; }
-agent_start() { (umask 077; ssh-agent >| "${SSH_ENV}") . "${SSH_ENV}" > /dev/null; }
+agent_start() { (umask 077; ssh-agent >| "${SSH_ENV}") && . "${SSH_ENV}" > /dev/null; }
 
 agent_load_env
 
