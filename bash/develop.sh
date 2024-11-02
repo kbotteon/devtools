@@ -96,8 +96,14 @@ fi
 # Share a history file across all active Bash sessions using this script
 HISTFILE=${HOME}/.config/devtools/history
 # Keep a long history; sometimes we need that obscure command from last month
-HISTSIZE=5000
+if [[ "${DTC_HISTSIZE}" -gt 0 ]]; then
+    HISTSIZE="${DTC_HISTSIZE}"
+else
+    HISTSIZE=1000
+fi
+
 shopt -s histappend
+
 # Optionally, write history after every command so other shells can access it
 if [[ -n ${DTC_SHARE_HISTORY} ]]; then
     PROMPT_COMMAND="history -a; ${PROMPT_COMMAND}"
