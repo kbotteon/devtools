@@ -1,0 +1,72 @@
+= Helpful Tool Notes and Commands
+
+== Finding Files
+
+Recursively descend from working directory, finding a folder by name, and delete it:
+
+[source,bash]
+----
+find . -type d -name ".git" -exec rm -rf {} +
+----
+
+The `{}` is substitution and the `+` will create one long string of everything found, invoking a single `rm` operation.
+
+Alternatively, dry run the operation first:
+
+[source,bash]
+----
+find . -type d -name ".git" -print
+----
+
+== Using Git
+
+=== Fixing line endings on a per-repo basis
+Reverts line endings to those as they are stored in the repository.
+
+[source,bash]
+----
+git config core.autocrlf false
+git rm --cached -r .
+git reset --hard
+----
+
+=== Searching across repos
+
+To find all issues I opened that are still open:
+
+----
+is:open is:issue archived:false user:botteon
+----
+
+Substitute `user` for an Organization name to search that instead.
+
+To find all open issues assigned to me:
+
+----
+is:open is:issue archived:false assignee:botteon
+----
+
+=== Dealing with Submodules
+
+To get Git to include submodule status by default:
+
+[source,bash]
+----
+git config --global status.submoduleSummary true
+----
+
+After switching to a new branch in the super-repo that contains new submodules:
+
+[source,bash]
+----
+git submodule update --init --recursive
+----
+
+=== Adding files
+
+Recursively by extension:
+
+[source,bash]
+----
+find . -name '*.pdf' -print0 | xargs -0 git add
+----
