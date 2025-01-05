@@ -18,4 +18,5 @@ ln -sf ${TOOLS_DIR}/devtools/vnc/xstatup-xfce ${HOME}/.vnc/xstartup
 # For the life of a Codespace, retain installed ssh keys and config
 mkdir -p ${TMP_DIR}/dot-ssh
 chmod 700 ${TMP_DIR}/dot-ssh
-ln -s ${TMP_DIR}/dot-ssh ${HOME}/.ssh
+# Nope, this breaks key authentication, like with `gh cs ssh` so don't to it
+# ln -s ${TMP_DIR}/dot-ssh ${HOME}/.ssh
