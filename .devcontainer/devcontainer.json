@@ -11,14 +11,14 @@
         "context": "."
     },
 
-    "remoteUser": "devcontainer",
-    "containerUser": "devcontainer",
+    "remoteUser": "developer",
+    "containerUser": "developer",
 
     // https://containers.dev/features
     "features": {
 
         "ghcr.io/devcontainers/features/common-utils:2": {
-            "username": "devcontainer",
+            "username": "developer",
             "userUid": "1000",
             "userGid": "1000"
         },
@@ -33,7 +33,9 @@
         },
 
         "ghcr.io/devcontainers/features/git-lfs:1": {
-            "version": "3.4.0"
+            "version": "3.4.0",
+            // Fetch LFS artifacts in devcontainer repo prior to build
+            "autoPull": true
         }
     },
 
@@ -48,7 +50,14 @@
         }
     },
 
+    "mounts": [
+        "source=lv,target=/persist,type=volume"
+    ],
+
     // Run any lingering setup that we couldn't do in the Dockerfile
-    "postCreateCommand": ".devcontainer/final.sh"
+    "postCreateCommand": {
+        "Setup Persistent Volume": "sudo chown -R ${whoami}: /persist",
+        "Final Setup Script": ".devcontainer/final.sh"
+    }
 
 }
