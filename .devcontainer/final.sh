@@ -21,6 +21,8 @@ chmod 700 ${TMP_DIR}/dot-ssh
 # Nope, this breaks key authentication, like with `gh cs ssh` so don't to it
 # ln -s ${TMP_DIR}/dot-ssh ${HOME}/.ssh
 
-# Create a symbolic link to Codespace home directory so you can easily interact
-# with files there through VSCode, which opens /workspaces/cs6290-env
-ln -s /home/developer/ /workspaces/devtools/home
+# Create a symbolic link to Codespace home directory and persistede folder so
+# you can easily interact via VSCode, which opens /workspaces/{REPO}
+mkdir .mounts
+ln -s /home/developer /workspaces/devtools/.mounts/home
+ln -s /persist /workspaces/devtools/.mounts/persist
