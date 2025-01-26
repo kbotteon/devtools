@@ -1,0 +1,6 @@
+= Development Tools and Environment
+
+== SSH
+
+1. Forward port 2222
+1. ssh -p 2222 -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o GlobalKnownHostsFile=/dev/null developer@localhost
