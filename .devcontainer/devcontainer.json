@@ -48,7 +48,7 @@
         "source=lv,target=/persist,type=volume"
     ],
 
-    // Run any lingering setup that we couldn't do in the Dockerfile
+    // Run any setup that we couldn't do in the Dockerfile
     "postCreateCommand": {
         "Setup Persistent Volume": "sudo chown -R ${whoami}: /persist",
         "Final Setup Script": ".devcontainer/final.sh"

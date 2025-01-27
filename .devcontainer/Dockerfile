@@ -2,12 +2,10 @@ FROM ubuntu:20.04
 
 ARG USERNAME=developer
 
-RUN \
-    dpkg --add-architecture i386
+RUN dpkg --add-architecture i386
 
 # Install basic build tools
-RUN \
-    apt-get update \
+RUN apt-get update \
     && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
         sudo \
         make \
@@ -22,8 +20,7 @@ RUN \
         python3-dev
 
 # Add in the graphical stuff
-RUN \
-    apt-get update \
+RUN apt-get update \
     && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
         tigervnc-common \
         tigervnc-standalone-server \
