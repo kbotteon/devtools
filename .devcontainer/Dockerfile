@@ -10,6 +10,8 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-ins
     clang \
     cmake \
     gdb \
+    git \
+    git-lfs \
     make \
     python3 \
     python3-dev \
