@@ -12,20 +12,20 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-ins
     gdb \
     make \
     python3 \
-    python3-dev
+    python3-dev \
     python3-pip \
     screen \
     sudo \
     unzip \
-    vim \
+    vim
 
 # Add in the graphical stuff
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
-    dbus-x11
+    dbus-x11 \
     tigervnc-common \
     tigervnc-standalone-server \
     xfce4 \
-    xfce4-terminal \
+    xfce4-terminal
 
 # Make a non-root user, but allow sudo
 # The devcontainer.json takes care of this
