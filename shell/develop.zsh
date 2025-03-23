@@ -45,8 +45,9 @@ CLR_RED='%F{red}'
 CLR_END='%f'
 
 # A colorized prompt with user@host:full_path
-PS1_TITLE='%{$(print -n "\e]0;${USER}@${HOST}:${PWD}\a")%}'
-PS1_PROMPT="%n@${CLR_RED}%m${CLR_END}:%~"
+PS1_TITLE='%n@%m'
+PS1_PROMPT="%n@${CLR_RED}%m${CLR_END}:%d"
+PS1_NEWL=$'\n'
 
 # If the script to format the prompt with git info exists, locate it
 
@@ -65,10 +66,10 @@ fi
 if [[ -n ${GIT_PROMPT} ]]; then
     source "${GIT_PROMPT}"
     # Add Git status to the command line
-    export PROMPT="${PS1_TITLE}${PS1_PROMPT} ${CLR_RED}\$(__git_ps1 '(%s)')${CLR_END}\n└──> "
+    export PROMPT="${PS1_PROMPT} ${CLR_RED}\$(__git_ps1 '(%s)')${CLR_END}${PS1_NEWL}└──> "
 # Otherwise use the default PS1
 else
-    export PROMPT="${PS1_TITLE}${PS1_PROMPT}\n└──> "
+    export PROMPT="${PS1_PROMPT}${PS1_NEWL}└──> "
 fi
 
 ################################################################################
@@ -100,11 +101,11 @@ else
     export HISTFILESIZE=${HISTSIZE}
 fi
 
-shopt -s histappend
+export SAVEHIST=${HISTSIZE}
 
 # Optionally, write history after every command so other shells can access it
 if [[ -n ${DTC_SHARE_HISTORY} ]]; then
-    PROMPT_COMMAND="history -a; ${PROMPT_COMMAND}"
+    setopt SHARE_HISTORY
 fi
 
 # Run login scripts, if it's a login shell
@@ -122,14 +123,19 @@ fi
 # Host Setup
 ################################################################################
 
+# If there is a host definition file, source it
+if [[ -f "${HOME}/.config/devtools/config" ]]; then
+    source "${HOME}/.config/devtools/config"
+fi
+
 # Add user Python installs to path, if they exist
 if [[ -n ${DTC_USE_LOCAL_PYTHON} ]] && [[ -f ${HOME}/.local/bin ]]; then
     export PATH=$PATH:${HOME}/.local/bin
 fi
 
 # Run the user environment configuration, if it exists
-if [[ -f ${DTC_USER_ENV_SCRIPT} ]]; then
-    source ${DTC_USER_ENV_SCRIPT}
+if [[ -f ${DTC_USER_ENV} ]]; then
+    source ${DTC_USER_ENV}
 fi
 
 ################################################################################

@@ -6,25 +6,26 @@ RUN dpkg --add-architecture i386
 
 # Install basic build tools
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
-    sudo \
-    make \
-    unzip \
-    screen \
-    python3 \
-    python3-pip \
     build-essential \
-    cmake \
     clang \
+    cmake \
     gdb \
+    make \
+    python3 \
     python3-dev
+    python3-pip \
+    screen \
+    sudo \
+    unzip \
+    vim \
 
 # Add in the graphical stuff
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+    dbus-x11
     tigervnc-common \
     tigervnc-standalone-server \
     xfce4 \
     xfce4-terminal \
-    dbus-x11
 
 # Make a non-root user, but allow sudo
 # The devcontainer.json takes care of this

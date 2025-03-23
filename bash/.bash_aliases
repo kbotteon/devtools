@@ -23,10 +23,6 @@ if [[ "${OSTYPE}" == "darwin"* ]] && commands_available; then
     alias tar='gtar'
 fi
 
-# Filesystem info
-alias info-dir='LC_ALL=C LC_COLLATE=C ls -lhaF --group-directories-first'
-alias info-disk='du -hc --max-depth=1 .'
-
 # Copy: Remote & Interruptable
 alias cp-ri='rsync -av --progress --append-verify --partial'
 

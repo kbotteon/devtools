@@ -1,8 +1,10 @@
 # Example devtools configuration
+
+# Symlinked into home directoryhgrep
 export DTC_EXISTS="${HOME}/devtools"
 
 # Shell preferences
-export DTC_SHARE_HISTORY=1
+export DTC_SHARE_HISTORY=0
 export DTC_RUN_LOGIN=1
 export DTC_HISTSIZE=1000
 
@@ -11,11 +13,12 @@ unset DTC_XILINX_LICENSE_PATH
 unset DTC_XILINX_ROOT
 unset DTC_XILINX_VERSION
 
-# Rather than source yet another script, just include extra config here
-unset USER_ENV_SCRIPT
+# Accept everything in the default my.sh
+export DTC_USER_ENV="${DTC_EXISTS}/shell/my.sh"
 
-# Launch new VS Code windows from terminal
-alias vscode='open -n -a "Visual Studio Code"'
+# Keep all history together
+setopt APPEND_HISTORY
+export HISTTIMEFORMAT="%F %T "
 
 # Prefer GNU tools installed with Homebrew to built-ins
 export PATH=/opt/homebrew/bin:/opt/homebrew/opt/coreutils/libexec/gnubin:$PATH
