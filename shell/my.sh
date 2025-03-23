@@ -7,6 +7,9 @@ fi
 alias info-dir='LC_ALL=C LC_COLLATE=C ls -lhaF --group-directories-first'
 alias info-disk='du -hc --max-depth=1 .'
 
+# Navigation
+alias ..="cd .. && ls"
+
 # History grep
 hgrep() {
     grep -e "$*" ${HISTFILE}

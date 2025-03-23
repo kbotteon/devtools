@@ -26,4 +26,4 @@ ln -s /persist ${WORKSPACE}/${THIS_REPO}/.mounts/persist
 # Set up the default xstartup
 mkdir -p ${HOME}/.vnc
 chmod 755 ${HOME}/.vnc
-ln -sf ${TOOLS_DIR}/devtools/vnc/xstatup-xfce ${HOME}/.vnc/xstartup
+ln -sf ${TOOLS_DIR}/devtools/vnc/xstartup-xfce ${HOME}/.vnc/xstartup

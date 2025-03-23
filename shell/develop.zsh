@@ -60,6 +60,9 @@ elif [[ -f '/usr/lib/git-core/git-sh-prompt' ]]; then
 # RHEL
 elif [[ -f '/usr/share/git-core/contrib/completion/git-prompt.sh' ]]; then
     GIT_PROMPT='/usr/share/git-core/contrib/completion/git-prompt.sh'
+# Ubuntu 24.04+
+elif [[ -f '/usr/lib/git-core/git-sh-prompt' ]]; then
+    GIT_PROMPT='/usr/lib/git-core/git-sh-prompt'
 fi
 
 # If we could find a Git prompt setup script, source it and update our PS1
@@ -110,7 +113,7 @@ fi
 
 # Run login scripts, if it's a login shell
 if [[ -n ${DTC_RUN_LOGIN} ]]; then
-    if shopt -q login_shell; then
+    if [[ -o login ]]; then
         # Collect the scripts in .login
         for SCRIPT in ${HOME}/.login/*.sh; do
             # Run only executable files
