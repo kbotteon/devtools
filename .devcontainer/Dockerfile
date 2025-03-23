@@ -1,32 +1,30 @@
-FROM ubuntu:20.04
+FROM ubuntu:24.04
 
 ARG USERNAME=developer
 
 RUN dpkg --add-architecture i386
 
 # Install basic build tools
-RUN apt-get update \
-    && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
-        sudo \
-        make \
-        unzip \
-        screen \
-        python3 \
-        python3-pip \
-        build-essential \
-        cmake \
-        clang \
-        gdb \
-        python3-dev
+RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+    sudo \
+    make \
+    unzip \
+    screen \
+    python3 \
+    python3-pip \
+    build-essential \
+    cmake \
+    clang \
+    gdb \
+    python3-dev
 
 # Add in the graphical stuff
-RUN apt-get update \
-    && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
-        tigervnc-common \
-        tigervnc-standalone-server \
-        xfce4 \
-        xfce4-terminal \
-        dbus-x11
+RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+    tigervnc-common \
+    tigervnc-standalone-server \
+    xfce4 \
+    xfce4-terminal \
+    dbus-x11
 
 # Make a non-root user, but allow sudo
 # The devcontainer.json takes care of this
@@ -45,4 +43,4 @@ RUN CMDLINE="export PROMPT_COMMAND='history -a' && export HISTFILE=/persist/.bas
 
 USER $USERNAME
 WORKDIR /home/$USERNAME
-ENV SHELL=/bin/bash
+ENV SHELL=/bin/zsh

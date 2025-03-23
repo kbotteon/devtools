@@ -1,0 +1,21 @@
+# Example devtools configuration
+export DTC_EXISTS="${HOME}/devtools"
+
+# Shell preferences
+export DTC_SHARE_HISTORY=1
+export DTC_RUN_LOGIN=1
+export DTC_HISTSIZE=1000
+
+# These aren't used on MacOS
+unset DTC_XILINX_LICENSE_PATH
+unset DTC_XILINX_ROOT
+unset DTC_XILINX_VERSION
+
+# Rather than source yet another script, just include extra config here
+unset USER_ENV_SCRIPT
+
+# Launch new VS Code windows from terminal
+alias vscode='open -n -a "Visual Studio Code"'
+
+# Prefer GNU tools installed with Homebrew to built-ins
+export PATH=/opt/homebrew/bin:/opt/homebrew/opt/coreutils/libexec/gnubin:$PATH
