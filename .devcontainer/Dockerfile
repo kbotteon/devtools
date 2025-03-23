@@ -17,7 +17,8 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-ins
     screen \
     sudo \
     unzip \
-    vim
+    vim \
+    zsh
 
 # Add in the graphical stuff
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
@@ -44,4 +45,4 @@ RUN CMDLINE="export PROMPT_COMMAND='history -a' && export HISTFILE=/persist/.bas
 
 USER $USERNAME
 WORKDIR /home/$USERNAME
-ENV SHELL=/bin/zsh
+ENV SHELL=/bin/bash
