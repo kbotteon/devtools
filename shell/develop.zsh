@@ -69,6 +69,7 @@ fi
 if [[ -n ${GIT_PROMPT} ]]; then
     source "${GIT_PROMPT}"
     # Add Git status to the command line
+    setopt PROMPT_SUBST
     export PROMPT="${PS1_PROMPT} ${CLR_RED}\$(__git_ps1 '(%s)')${CLR_END}${PS1_NEWL}└──> "
 # Otherwise use the default PS1
 else
@@ -115,7 +116,7 @@ fi
 if [[ -n ${DTC_RUN_LOGIN} ]]; then
     if [[ -o login ]]; then
         # Collect the scripts in .login
-        for SCRIPT in ${HOME}/.login/*.sh; do
+        for SCRIPT in ${HOME}/.login/*; do
             # Run only executable files
             [ -f "${SCRIPT}" ] && [ -x "${SCRIPT}" ] && "${SCRIPT}"
         done
