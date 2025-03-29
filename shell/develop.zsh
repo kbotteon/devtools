@@ -107,9 +107,24 @@ fi
 
 export SAVEHIST=${HISTSIZE}
 
-# Optionally, write history after every command so other shells can access it
+# Keep a subjectively clean history, if requested
+if [[ -n ${DTC_CLEAN_HISTORY} ]]; then
+    setopt APPEND_HISTORY
+    unsetopt SHARE_HISTORY
+    unsetopt EXTENDED_HISTORY
+    setopt HIST_SAVE_NO_DUPS
+    setopt HIST_IGNORE_ALL_DUPS
+    setopt HIST_REDUCE_BLANKS
+fi
+
+# Optionally, override clean history and share with other shells
 if [[ -n ${DTC_SHARE_HISTORY} ]]; then
     setopt SHARE_HISTORY
+fi
+
+# Prefer Homebrew tools to built-ins
+if [[ -n ${DTC_PREFER_HOMEBREW} ]]; then
+    export PATH=/opt/homebrew/bin:/opt/homebrew/opt/coreutils/libexec/gnubin:$PATH
 fi
 
 # Run login scripts, if it's a login shell

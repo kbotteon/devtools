@@ -1,12 +1,14 @@
-# Example devtools configuration
+# Example devtools configuration for zsh
 
-# Symlinked into home directoryhgrep
+# Symlinked into home directory
 export DTC_EXISTS="${HOME}/devtools"
 
 # Shell preferences
 export DTC_SHARE_HISTORY=0
+export DTC_CLEAN_HISTORY=1
 export DTC_RUN_LOGIN=1
 export DTC_HISTSIZE=1000
+export DTC_PREFER_HOMEBREW=1
 
 # These aren't used on MacOS
 unset DTC_XILINX_LICENSE_PATH
@@ -15,10 +17,3 @@ unset DTC_XILINX_VERSION
 
 # Accept everything in the default my.sh
 export DTC_USER_ENV="${DTC_EXISTS}/shell/my.sh"
-
-# Keep all history together
-setopt APPEND_HISTORY
-export HISTTIMEFORMAT="%F %T "
-
-# Prefer GNU tools installed with Homebrew to built-ins
-export PATH=/opt/homebrew/bin:/opt/homebrew/opt/coreutils/libexec/gnubin:$PATH
