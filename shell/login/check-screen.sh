@@ -4,7 +4,7 @@
 ################################################################################
 
 # If screen is installed, check for any active sessions
-if [[ type screen >/dev/null 2>&1 ]]; then
+if command -v screen >/dev/null 2>&1; then
     # Screens always prints output, so look for the PIDs instead
     screens=$(screen -list | grep -E '[0-9]+\.[a-zA-Z0-9]+')
     # Print the banner if anything was listed
@@ -20,7 +20,7 @@ if [[ type screen >/dev/null 2>&1 ]]; then
 fi
 
 # If tmux is installed, check for those too
-if [[ type tmux >/dev/null 2>&1 ]]; then
+if command -v tmux >/dev/null 2>&1; then
     sessions=$(tmux list-sessions 2>/dev/null)
     if [[ -n $sessions ]]; then
         printf "\r\n"
