@@ -6,6 +6,7 @@
 
 [alias]
     trail = log --oneline --decorate --stat --graph
+    last = show --stat --patch
 
 [core]
     autocrlf = input
@@ -25,5 +26,5 @@
     recurse = true
 
 [user]
-        name = Kyle Botteon
-        email = 49845890+kbotteon@users.noreply.github.com
+    name = Kyle Botteon
+    email = 49845890+kbotteon@users.noreply.github.com
