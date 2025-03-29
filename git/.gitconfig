@@ -4,24 +4,26 @@
 # [include]
 #     path = /path/to/devtools/git/.gitconfig
 
-[init]
-
-    defaultBranch = devel
+[alias]
+    trail = log --oneline --decorate --stat --graph
 
 [core]
-
     autocrlf = input
     editor = vim
 
-[pull]
+[init]
+    defaultBranch = devel
 
+[pull]
     ff = only
     rebase = false
 
-[submodule]
+[status]
+    submoduleSummary = true
 
+[submodule]
     recurse = true
 
-[alias]
-
-    trail = log --oneline --decorate --stat --graph
+[user]
+        name = Kyle Botteon
+        email = 49845890+kbotteon@users.noreply.github.com

@@ -1,19 +1,26 @@
-# Launch new VS Code windows from terminal
-if [[ "${OSTYPE}" == "darwin"* ]]; then
-    alias vscode='open -n -a "Visual Studio Code"'
-fi
+# ------------------------------------------------------------------------------
+# Generic
+# ------------------------------------------------------------------------------
 
 # Filesystem info
-alias info-dir='LC_ALL=C LC_COLLATE=C ls -lhaF --group-directories-first'
-alias info-disk='du -hc --max-depth=1 .'
+alias here='pwd && LC_ALL=C LC_COLLATE=C ls -lhaF --group-directories-first'
+alias bloat='du -hc --max-depth=1'
 alias ll='ls -lha --color=auto'
 alias ls='ls --color=auto'
 
 # Navigation
-alias ..="cd .. && ls"
+alias ..="cd .. && pwd && ls"
 
-# History grep
+# History search
 hgrep() {
-    grep -e "$*" ${HISTFILE}
+    history | grep -i "$*"
 }
 
+# ------------------------------------------------------------------------------
+# MacOS
+# ------------------------------------------------------------------------------
+
+if [[ "${OSTYPE}" == "darwin"* ]]; then
+    # Launch new VS Code windows from terminal
+    alias vscode='open -n -a "Visual Studio Code"'
+fi
