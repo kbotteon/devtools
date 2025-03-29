@@ -30,4 +30,5 @@ if command -v tmux >/dev/null 2>&1; then
         printf "\r\n"
         tmux list-sessions
         printf "\r\n"
+    fi
 fi
