@@ -124,7 +124,7 @@ fi
 
 # Prefer Homebrew tools to built-ins
 if [[ -n ${DTC_PREFER_HOMEBREW} ]]; then
-    export PATH=/opt/homebrew/bin:/opt/homebrew/opt/coreutils/libexec/gnubin:$PATH
+    export PATH=/opt/homebrew/opt/coreutils/libexec/gnubin:/opt/homebrew/bin:$PATH
 fi
 
 # Run login scripts, if it's a login shell
