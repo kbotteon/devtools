@@ -22,8 +22,15 @@ ln -s /persist ${WORKSPACE}/${THIS_REPO}/.mounts/persist
 # cd ${TOOLS_DIR} && git clone https://github.com/kbotteon/devtools.git
 
 ################################################################################
+################################################################################
 
 # Set up the default xstartup
 mkdir -p ${HOME}/.vnc
 chmod 755 ${HOME}/.vnc
 ln -sf ${TOOLS_DIR}/devtools/vnc/xstartup-xfce ${HOME}/.vnc/xstartup
+
+################################################################################
+
+cp ${WORKSPACE}/${THIS_REPO}/shell/.zshrc ${HOME}/
+
+################################################################################
