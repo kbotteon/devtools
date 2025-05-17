@@ -9,8 +9,8 @@ TOOLS_DIR="${WORKSPACE}/tools"
 
 ################################################################################
 
-# Create a symbolic link to Codespace home directory and persisted folder so
-# you can easily interact via VSCode, which opens ${WORKSPACE}/{REPO}
+# Create a symbolic link to Codespace home directory and persisted folder so you
+# can easily interact via VSCode, which opens ${WORKSPACE}/{THIS_REPO} by default
 mkdir .mounts
 ln -s /home/developer ${WORKSPACE}/${THIS_REPO}/.mounts/home
 ln -s /persist ${WORKSPACE}/${THIS_REPO}/.mounts/persist
