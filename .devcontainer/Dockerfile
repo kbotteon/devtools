@@ -5,7 +5,7 @@ ARG USERNAME=developer
 RUN dpkg --add-architecture i386
 
 # Install basic build tools
-RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
     build-essential \
     clang \
     cmake \
@@ -20,31 +20,27 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-ins
     sudo \
     unzip \
     vim \
-    zsh
+    zsh \
+    netcat-openbsd \
+    socat \
+    clang-format \
+    less \
+    strace \
+    rsync \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Add in the graphical stuff
-RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
     dbus-x11 \
     tigervnc-common \
     tigervnc-standalone-server \
     xfce4 \
-    xfce4-terminal
+    xfce4-terminal \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Make a non-root user, but allow sudo
-# The devcontainer.json takes care of this
-RUN useradd -m -s /bin/bash $USERNAME
-RUN usermod -aG sudo $USERNAME
-
-# Allow sudo without a password
-RUN echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
-
-# Keep bash history between sessions
-RUN CMDLINE="export PROMPT_COMMAND='history -a' && export HISTFILE=/persist/.bash_history" \
-    && mkdir /persist \
-    && touch /persist/.bash_history \
-    && chown -R $USERNAME /persist \
-    && echo "$CMDLINE" >> "/home/$USERNAME/.bashrc"
+# Make a non-root user and allow sudo without password
+RUN useradd -m -s /bin/zsh $USERNAME && \
+    usermod -aG sudo $USERNAME && \
+    echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 
 USER $USERNAME
-WORKDIR /home/$USERNAME
-ENV SHELL=/bin/bash

@@ -3,27 +3,35 @@
 # \brief Post-creation setup to run as user specified in Dockerfile
 ################################################################################
 
-WORKSPACE='/workspaces'
-THIS_REPO='devtools'
-TOOLS_DIR="${WORKSPACE}/tools"
+USER=$(whoami)
+WS='/sandboxes'
+PKG="${WS}/devtools"
+TOOLS="${WS}/tools"
 
 ################################################################################
 
-# Create a symbolic link to Codespace home directory and persisted folder so you
-# can easily interact via VSCode, which opens ${WORKSPACE}/{THIS_REPO} by default
-mkdir .mounts
-ln -s /home/developer ${WORKSPACE}/${THIS_REPO}/.mounts/home
-ln -s /persist ${WORKSPACE}/${THIS_REPO}/.mounts/persist
+# Create symlinks for easy access
+mkdir ${WS}/.mounts && ln -s /persist ${PKG}/.mounts/persist
 
-################################################################################
-
-# These persist between start/stop/rebuild but not delete/create
-# mkdir -p ${TOOLS_DIR}
 # cd ${TOOLS_DIR} && git clone https://github.com/kbotteon/devtools.git
+ln -s ${WS}/devtools ${TOOLS}/devtools
 
 ################################################################################
 
-# Set up the default xstartup
+# Migrate home directory to persistent storage
+mkdir /persist/home
+cp -a /home/${USER}/. /persist/home/
+rm -rf /home/${USER}
+ln -s /persist/home /home/${USER}
+
+################################################################################
+
+# Set up the default VNC
 mkdir -p ${HOME}/.vnc
 chmod 755 ${HOME}/.vnc
-ln -sf ${TOOLS_DIR}/devtools/vnc/xstartup-xfce ${HOME}/.vnc/xstartup
+cp ${TOOLS}/devtools/vnc/xstartup-xfce ${HOME}/.vnc/xstartup
+
+################################################################################
+
+ln -s ${TOOLS}/devtools/shell/develop.sh ${HOME}/develop.ln
+touch ${HOME}/.zshrc && echo "source ${HOME}/develop.ln" >> ${HOME}/.zshrc

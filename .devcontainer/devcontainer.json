@@ -1,44 +1,42 @@
 {
-
-    "hostRequirements": {
-        "cpus": 4,
-        "memory": "8gb",
-        "storage": "32gb"
-    },
-
     "build": {
-        "dockerfile": "./Dockerfile",
-        "context": "."
+        "context": ".",
+        "dockerfile": "./Dockerfile"
     },
-
-    "remoteUser": "developer",
     "containerUser": "developer",
-
-    // https://containers.dev/features
-    "features": {
-        "ghcr.io/devcontainers/features/sshd:1": {},
-        "ghcr.io/devcontainers/features/github-cli:1": {}
-    },
-
     "customizations": {
         "vscode": {
             "settings": {
                 // Eliminates need for .editorconfig
                 "editor.renderWhitespace": "all",
-                "files.trimTrailingWhitespace": true,
-                "files.insertFinalNewline": true
+                "files.insertFinalNewline": true,
+                "files.trimTrailingWhitespace": true
             }
         }
     },
-
+    "features": {
+        "ghcr.io/devcontainers/features/github-cli:1": {},
+        "ghcr.io/devcontainers/features/sshd:1": {}
+    },
+    "hostRequirements": {
+        "cpus": 2,
+        "memory": "4gb",
+        "storage": "16gb"
+    },
     "mounts": [
         "source=lv,target=/persist,type=volume"
     ],
-
     // Run any setup that we couldn't do in the Dockerfile
     "postCreateCommand": {
-        "Setup Persistent Volume": "sudo chown -R ${whoami}: /persist",
-        "Final Setup Script": ".devcontainer/final.sh"
-    }
-
+        "Own Persistent Volume": "sudo chown -R ${whoami}: /persist",
+        "Run Final Setup Script": "sudo .devcontainer/final.sh"
+    },
+    "remoteUser": "developer",
+    "runArgs": [ // For C++ Debuggers
+        "--cap-add=SYS_PTRACE",
+        "--security-opt",
+        "seccomp=unconfined"
+    ],
+    "workspaceFolder": "sandboxes",
+    "workspaceMount": "source=${localWorkspaceFolder},target=/sandboxes,type=bind,consistency=cached"
 }
