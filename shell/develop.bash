@@ -34,6 +34,12 @@ else
   SCRIPT_ARG1=${1,,}
 fi
 
+# If there is a host definition file, source it
+# We always expect it to be in a user's home directory
+if [[ -f "${HOME}/.devtools/config" ]]; then
+    source "${HOME}/.devtools/config"
+fi
+
 ################################################################################
 # Setup Prompt
 ################################################################################
@@ -127,12 +133,6 @@ fi
 # Host Setup
 ################################################################################
 
-# If there is a host definition file, source it
-# We always expect it to be in a user's home directory
-if [[ -f "${HOME}/.config/devtools/config" ]]; then
-    source "${HOME}/.config/devtools/config"
-fi
-
 # Set up Xilinx tools, if the roots were defined
 if [[ -n ${DTC_XILINX_ROOT} ]] && [[ -n ${DTC_XILINX_VERSION} ]]; then
     export VITIS_ROOT=${DTC_XILINX_ROOT}/Vitis/${DTC_XILINX_VERSION}
@@ -145,11 +145,6 @@ fi
 # Add user Python installs to path, if they exist
 if [ -f ${HOME}/.local/bin ]; then
     export PATH=$PATH:${HOME}/.local/bin
-fi
-
-# Run the user environment configuration, if it exists
-if [[ -f ${DTC_USER_ENV_SCRIPT} ]]; then
-    source ${DTC_USER_ENV_SCRIPT}
 fi
 
 ################################################################################

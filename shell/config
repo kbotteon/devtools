@@ -16,4 +16,4 @@ unset DTC_XILINX_ROOT
 unset DTC_XILINX_VERSION
 
 # Accept everything in the default my.sh
-export DTC_USER_ENV="${DTC_EXISTS}/shell/my.sh"
+source ${DTC_EXISTS}/shell/my.sh

@@ -6,27 +6,37 @@
 WS='/persist/sandboxes'
 PKG="${WS}/devtools"
 
+# Create symlinks for easy access
+mkdir -p ${WS}/.mounts && ln -sf /persist/home ${WS}/.mounts/home
+
 #-------------------------------------------------------------------------------
 # Devtools
 #-------------------------------------------------------------------------------
 
-# Create symlinks for easy access
-mkdir -p ${WS}/.mounts && ln -sf /persist/home ${WS}/.mounts/home
-
 # This *is* the tools repo Codespace, so we don't need to clone it
 # cd ${WS} && git clone https://github.com/kbotteon/devtools.git
+mkdir -p ${HOME}/.devtools && touch ${HOME}/.devtools/history
 
-ln -sf ${PKG}/shell/develop.zsh ${HOME}/develop.ln
-touch ${HOME}/.zshrc && echo "source ${HOME}/develop.ln" >> ${HOME}/.zshrc
+# Default devtools config
+echo "
+export DTC_CLEAN_HISTORY=1
+source ${PKG}/shell/my.sh
+" >> ${HOME}/.devtools/config
+
+# Source devtools in every shell
+echo "# Grab devtools in every shell
+source ${PKG}/shell/develop.zsh
+" >> ${HOME}/.zshrc
 
 #-------------------------------------------------------------------------------
 # Git
 #-------------------------------------------------------------------------------
 
-echo '# Include default Git setup
+echo "
+# Include default Git setup
 [include]
-    path = /persist/sandboxes/devtools/git/.gitconfig
-' >> ${HOME}/.gitconfig
+    path = ${PKG}/git/.gitconfig
+" >> ${HOME}/.gitconfig
 
 #-------------------------------------------------------------------------------
 # VNC
@@ -43,10 +53,10 @@ cp ${PKG}/vnc/xstartup-xfce ${HOME}/.vnc/xstartup
 
 mkdir -p ${HOME}/.ssh && chmod 700 ${HOME}/.ssh
 
-echo '# Access all repos by adding a key called id_gh
+echo "# Access all repos by adding a key called id_gh
 Host github.com
     User git
     IdentityFile ~/.ssh/kbotteon@github.com
-' >> ${HOME}/.ssh/config
+" >> ${HOME}/.ssh/config
 
 #-------------------------------------------------------------------------------

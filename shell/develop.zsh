@@ -34,6 +34,11 @@ else
   SCRIPT_ARG1=${1:l}
 fi
 
+# If there is a host definition file, source it
+if [[ -f "${HOME}/.devtools/config" ]]; then
+    source "${HOME}/.devtools/config"
+fi
+
 ################################################################################
 # Setup Prompt
 ################################################################################
@@ -94,7 +99,7 @@ fi
 ################################################################################
 
 # Share a history file across all sessions that use this script
-export HISTFILE=${HOME}/.config/devtools/history
+export HISTFILE=${HOME}/.devtools/history
 
 # Keep a long history; sometimes we need that obscure command from last month
 if [[ "${DTC_HISTSIZE}" -gt 0 ]]; then
@@ -142,19 +147,9 @@ fi
 # Host Setup
 ################################################################################
 
-# If there is a host definition file, source it
-if [[ -f "${HOME}/.config/devtools/config" ]]; then
-    source "${HOME}/.config/devtools/config"
-fi
-
 # Add user Python installs to path, if they exist
 if [[ -n ${DTC_USE_LOCAL_PYTHON} ]] && [[ -f ${HOME}/.local/bin ]]; then
     export PATH=$PATH:${HOME}/.local/bin
-fi
-
-# Run the user environment configuration, if it exists
-if [[ -f ${DTC_USER_ENV} ]]; then
-    source ${DTC_USER_ENV}
 fi
 
 ################################################################################
