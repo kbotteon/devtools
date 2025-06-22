@@ -16,6 +16,9 @@ mkdir -p ${WS}/.mounts && ln -sf /persist/home ${WS}/.mounts/home
 # Make a persistent bin directory to put applications in
 mkdir -p ${WS}/.bin
 
+# Remove unused default directories
+rmdir ${HOME}/{Documents,Music,Pictures,Public,Templates,Videos} 2>/dev/null || true
+
 #-------------------------------------------------------------------------------
 # Devtools
 #-------------------------------------------------------------------------------

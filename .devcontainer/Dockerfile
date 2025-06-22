@@ -8,25 +8,28 @@ RUN dpkg --add-architecture i386
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
     build-essential \
     clang \
+    clang-format \
     cmake \
     gdb \
     git \
     git-lfs \
+    gzip \
+    less \
     make \
+    net-tools \
+    netcat-openbsd \
     python3 \
     python3-dev \
     python3-pip \
+    rsync \
     screen \
+    socat \
+    strace \
     sudo \
     unzip \
     vim \
+    wget \
     zsh \
-    netcat-openbsd \
-    socat \
-    clang-format \
-    less \
-    strace \
-    rsync \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Add in the graphical stuff
