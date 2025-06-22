@@ -23,12 +23,11 @@
         "storage": "16gb"
     },
     "mounts": [
-        "source=lv,target=/persist,type=volume",
-        "source=lv,target=/sandboxes,type=volume"
+        "source=lv,target=/persist,type=volume"
     ],
     "postCreateCommand": {
-        "Own Volumes": "sudo chown -R $(whoami): /persist /sandboxes",
-        "Run Final Setup Script": "/sandboxes/devtools/.devcontainer/final.sh"
+        "Own Volumes": "sudo chown -R $(whoami): /persist",
+        "Run Final Setup Script": "/persist/sandboxes/devtools/.devcontainer/final.sh"
     },
     "remoteUser": "developer",
     "runArgs": [ // For C++ Debuggers
@@ -36,6 +35,6 @@
         "--security-opt",
         "seccomp=unconfined"
     ],
-    "workspaceFolder": "/sandboxes",
-    "workspaceMount": "source=${localWorkspaceFolder},target=/sandboxes/devtools,type=bind,consistency=cached"
+    "workspaceFolder": "/persist/sandboxes",
+    "workspaceMount": "source=${localWorkspaceFolder},target=/persist/sandboxes/devtools,type=bind,consistency=cached"
 }
