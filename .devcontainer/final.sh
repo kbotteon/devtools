@@ -56,7 +56,7 @@ mkdir -p ${HOME}/.ssh && chmod 700 ${HOME}/.ssh
 echo "# Access all repos by adding a key called id_gh
 Host github.com
     User git
-    IdentityFile ~/.ssh/kbotteon@github.com
+    IdentityFile ~/.ssh/${GITHUB_USER}@github.com
 " >> ${HOME}/.ssh/config
 
 #-------------------------------------------------------------------------------
