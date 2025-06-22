@@ -13,7 +13,7 @@ PKG="${WS}/devtools"
 # Create symlinks for easy access
 mkdir -p ${WS}/.mounts && ln -sf /persist/home ${WS}/.mounts/home
 
-# A persistent bin directory to put applications
+# Make a persistent bin directory to put applications in
 mkdir -p ${WS}/.bin
 
 #-------------------------------------------------------------------------------
@@ -22,7 +22,8 @@ mkdir -p ${WS}/.bin
 
 # This *is* the tools repo Codespace, so we don't need to clone it
 # cd ${WS} && git clone https://github.com/kbotteon/devtools.git
-mkdir -p ${HOME}/.devtools && touch ${HOME}/.devtools/history
+mkdir -p ${HOME}/.devtools
+touch ${HOME}/.devtools/history
 
 # Default devtools config
 echo "
@@ -46,14 +47,15 @@ echo "
 " >> ${HOME}/.gitconfig
 
 #-------------------------------------------------------------------------------
-# VNC
+# GUI Apps
 #-------------------------------------------------------------------------------
 
-# Set up the default VNC
+# VNC
 mkdir -p ${HOME}/.vnc
 chmod 755 ${HOME}/.vnc
 cp ${PKG}/vnc/xstartup-xfce ${HOME}/.vnc/xstartup
 
+# Browser
 curl -o /tmp/firefox.tar.xz https://download-installer.cdn.mozilla.net/pub/firefox/releases/139.0.4/linux-x86_64/en-US/firefox-139.0.4.tar.xz
 (
     cd /tmp
@@ -67,7 +69,7 @@ curl -o /tmp/firefox.tar.xz https://download-installer.cdn.mozilla.net/pub/firef
 
 mkdir -p ${HOME}/.ssh && chmod 700 ${HOME}/.ssh
 
-echo "# Access all repos by adding a key called id_gh
+echo "# Access all of your repos by adding a key called {USER}@github.com
 Host github.com
     User git
     IdentityFile ~/.ssh/${GITHUB_USER}@github.com
