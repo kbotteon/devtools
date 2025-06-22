@@ -23,11 +23,12 @@
         "storage": "16gb"
     },
     "mounts": [
-        "source=lv,target=/persist,type=volume"
+        "source=lv,target=/persist,type=volume",
+        "source=lv,target=/sandboxes,type=volume"
     ],
     "postCreateCommand": {
-        "Own Persistent Volume": "sudo chown -R ${whoami}: /persist",
-        "Run Final Setup Script": "./devtools/.devcontainer/final.sh"
+        "Own Volumes": "sudo chown -R $(whoami): /persist /sandboxes",
+        "Run Final Setup Script": "/sandboxes/devtools/.devcontainer/final.sh"
     },
     "remoteUser": "developer",
     "runArgs": [ // For C++ Debuggers
