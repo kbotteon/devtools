@@ -6,8 +6,15 @@
 WS='/persist/sandboxes'
 PKG="${WS}/devtools"
 
+#-------------------------------------------------------------------------------
+# Filesystem
+#-------------------------------------------------------------------------------
+
 # Create symlinks for easy access
 mkdir -p ${WS}/.mounts && ln -sf /persist/home ${WS}/.mounts/home
+
+# A persistent bin directory to put applications
+mkdir -p ${WS}/.bin
 
 #-------------------------------------------------------------------------------
 # Devtools
@@ -46,6 +53,13 @@ echo "
 mkdir -p ${HOME}/.vnc
 chmod 755 ${HOME}/.vnc
 cp ${PKG}/vnc/xstartup-xfce ${HOME}/.vnc/xstartup
+
+curl -o /tmp/firefox.tar.xz https://download-installer.cdn.mozilla.net/pub/firefox/releases/139.0.4/linux-x86_64/en-US/firefox-139.0.4.tar.xz
+(
+    cd /tmp
+    tar -xvf firefox.tar.xz -C ${WS}/.bin
+    ln -sf ${WS}/.bin/firefox/firefox ${WS}/.bin/start-firefox
+)
 
 #-------------------------------------------------------------------------------
 # SSH
