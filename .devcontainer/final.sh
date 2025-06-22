@@ -20,6 +20,15 @@ ln -sf ${PKG}/shell/develop.zsh ${HOME}/develop.ln
 touch ${HOME}/.zshrc && echo "source ${HOME}/develop.ln" >> ${HOME}/.zshrc
 
 #-------------------------------------------------------------------------------
+# Git
+#-------------------------------------------------------------------------------
+
+echo '# Include default Git setup
+[include]
+    path = /persist/sandboxes/devtools/git/.gitconfig
+' >> ${HOME}/.gitconfig
+
+#-------------------------------------------------------------------------------
 # VNC
 #-------------------------------------------------------------------------------
 
@@ -29,15 +38,15 @@ chmod 755 ${HOME}/.vnc
 cp ${PKG}/vnc/xstartup-xfce ${HOME}/.vnc/xstartup
 
 #-------------------------------------------------------------------------------
-# SSH Config
+# SSH
 #-------------------------------------------------------------------------------
 
 mkdir -p ${HOME}/.ssh && chmod 700 ${HOME}/.ssh
 
-echo '# Access all private repos by default
+echo '# Access all repos by adding a key called id_gh
 Host github.com
-    IdentityFile ~/.ssh/id_gh
     User git
+    IdentityFile ~/.ssh/kbotteon@github.com
 ' >> ${HOME}/.ssh/config
 
 #-------------------------------------------------------------------------------
