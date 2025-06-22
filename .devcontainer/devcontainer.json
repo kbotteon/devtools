@@ -7,7 +7,6 @@
     "customizations": {
         "vscode": {
             "settings": {
-                // Eliminates need for .editorconfig
                 "editor.renderWhitespace": "all",
                 "files.insertFinalNewline": true,
                 "files.trimTrailingWhitespace": true
@@ -26,10 +25,9 @@
     "mounts": [
         "source=lv,target=/persist,type=volume"
     ],
-    // Run any setup that we couldn't do in the Dockerfile
     "postCreateCommand": {
         "Own Persistent Volume": "sudo chown -R ${whoami}: /persist",
-        "Run Final Setup Script": "sudo .devcontainer/final.sh"
+        "Run Final Setup Script": "./devtools/.devcontainer/final.sh"
     },
     "remoteUser": "developer",
     "runArgs": [ // For C++ Debuggers
@@ -37,6 +35,6 @@
         "--security-opt",
         "seccomp=unconfined"
     ],
-    "workspaceFolder": "sandboxes",
-    "workspaceMount": "source=${localWorkspaceFolder},target=/sandboxes,type=bind,consistency=cached"
+    "workspaceFolder": "/sandboxes",
+    "workspaceMount": "source=${localWorkspaceFolder},target=/sandboxes/devtools,type=bind,consistency=cached"
 }

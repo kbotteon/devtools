@@ -39,7 +39,7 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Make a non-root user and allow sudo without password
-RUN useradd -m -s /bin/zsh $USERNAME && \
+RUN useradd -m -d /persist/home -s /bin/zsh $USERNAME && \
     usermod -aG sudo $USERNAME && \
     echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 
