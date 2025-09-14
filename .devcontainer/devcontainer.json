@@ -10,7 +10,14 @@
                 "editor.renderWhitespace": "all",
                 "files.insertFinalNewline": true,
                 "files.trimTrailingWhitespace": true
-            }
+            },
+            "extensions": [
+                "ms-vscode.cpptools",
+                "ms-python.python",
+                "ms-python.debugpy",
+                "ms-azuretools.vscode-docker",
+                "eamodio.gitlens"
+            ]
         }
     },
     "features": {
