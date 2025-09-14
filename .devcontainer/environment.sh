@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 ################################################################################
 # \brief Post-creation setup to run as user specified in Dockerfile
+# \warning This is NOT run as root
 ################################################################################
 
 WS='/persist/sandboxes'

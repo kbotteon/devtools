@@ -27,6 +27,7 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
     strace \
     sudo \
     unzip \
+    valgrind \
     vim \
     wget \
     zsh \

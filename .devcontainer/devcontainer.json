@@ -34,7 +34,8 @@
     ],
     "postCreateCommand": {
         "Own Volumes": "sudo chown -R $(whoami): /persist",
-        "Run Final Setup Script": "/persist/sandboxes/devtools/.devcontainer/final.sh"
+        "Run Core Environment Setup": "/persist/sandboxes/devtools/.devcontainer/environment.sh",
+        "Run Project Setup": "/persist/sandboxes/devtools/.devcontainer/project.sh"
     },
     "remoteUser": "developer",
     "runArgs": [ // For C++ Debuggers
