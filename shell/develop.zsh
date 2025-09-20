@@ -45,13 +45,14 @@ fi
 
 # Color escape sequences
 CLR_BLU='%F{blue}'
+CLR_CYN='%F{cyan}'
 CLR_GRN='%F{green}'
 CLR_RED='%F{red}'
 CLR_END='%f'
 
 # A colorized prompt with user@host:full_path
 PS1_TITLE='%n@%m'
-PS1_PROMPT="%n@${CLR_RED}%m${CLR_END}:%d"
+PS1_PROMPT="%n@${CLR_CYN}%m${CLR_END}:%d"
 PS1_NEWL=$'\n'
 
 # If the script to format the prompt with git info exists, locate it
@@ -75,10 +76,10 @@ if [[ -n ${GIT_PROMPT} ]]; then
     source "${GIT_PROMPT}"
     # Add Git status to the command line
     setopt PROMPT_SUBST
-    export PROMPT="${PS1_PROMPT} ${CLR_RED}\$(__git_ps1 '(%s)')${CLR_END}${PS1_NEWL}└──> "
+    export PROMPT="${PS1_PROMPT} ${CLR_CYN}\$(__git_ps1 '(%s)')${CLR_END}${PS1_NEWL}${CLR_CYN}└──> ${CLR_END}"
 # Otherwise use the default PS1
 else
-    export PROMPT="${PS1_PROMPT}${PS1_NEWL}└──> "
+    export PROMPT="${PS1_PROMPT}${PS1_NEWL}${CLR_CYN}└──> ${CLR_END}"
 fi
 
 ################################################################################
