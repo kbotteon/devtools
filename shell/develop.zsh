@@ -48,11 +48,13 @@ CLR_BLU='%F{blue}'
 CLR_CYN='%F{cyan}'
 CLR_GRN='%F{green}'
 CLR_RED='%F{red}'
+CLR_GRY=$'\033[90m'
 CLR_END='%f'
 
 # A colorized prompt with user@host:full_path
+: ${DTC_FRIENDLY_NAME:=%m}
 PS1_TITLE='%n@%m'
-PS1_PROMPT="%n@${CLR_CYN}%m${CLR_END}:%d"
+PS1_PROMPT="%n@${CLR_CYN}${DTC_FRIENDLY_NAME}${CLR_END}:%d"
 PS1_NEWL=$'\n'
 
 # If the script to format the prompt with git info exists, locate it
@@ -71,12 +73,23 @@ elif [[ -f '/usr/lib/git-core/git-sh-prompt' ]]; then
     GIT_PROMPT='/usr/lib/git-core/git-sh-prompt'
 fi
 
+export VIRTUAL_ENV_DISABLE_PROMPT=1
+PS1_PREFIX='$(w=$(tput cols); printf '-%.0s' $(seq 2 $((w >> 80 ? 80 : w))))${PS1_NEWL}'
+PS1_DECORATOR=${DTC_PS1_DECORATOR:-"└──>"}
+
+get_venv() {
+    if [[ -n "$VIRTUAL_ENV" ]]; then
+        echo " [$(basename "$VIRTUAL_ENV")]"
+    fi
+}
+
 # If we could find a Git prompt setup script, source it and update our PS1
 if [[ -n ${GIT_PROMPT} ]]; then
     source "${GIT_PROMPT}"
     # Add Git status to the command line
     setopt PROMPT_SUBST
-    export PROMPT="${PS1_PROMPT} ${CLR_CYN}\$(__git_ps1 '(%s)')${CLR_END}${PS1_NEWL}${CLR_CYN}└──> ${CLR_END}"
+    # export PROMPT="${PS1_PROMPT} ${CLR_CYN}\$(__git_ps1 '(%s)')${CLR_END}${PS1_NEWL}${CLR_CYN}└──> ${CLR_END}"
+    export PROMPT="${CLR_GRY}${PS1_PREFIX}${CLR_END}${PS1_PROMPT} ${CLR_CYAN}\$(__git_ps1 '[%s]')\$(get_venv)${PS1_NEWL}${PS1_DECORATOR} ${CLR_END}"
 # Otherwise use the default PS1
 else
     export PROMPT="${PS1_PROMPT}${PS1_NEWL}${CLR_CYN}└──> ${CLR_END}"
@@ -135,9 +148,9 @@ fi
 
 # Run login scripts, if it's a login shell
 if [[ -n ${DTC_RUN_LOGIN} ]]; then
-    if [[ -o login ]]; then
+    if [[ -o login ]] || [[ -n $PS1 ]]; then
         # Collect the scripts in .login
-        for SCRIPT in ${HOME}/.login/*; do
+        for SCRIPT in ${HOME}/.config/devtools/login/*; do
             # Run only executable files
             [ -f "${SCRIPT}" ] && [ -x "${SCRIPT}" ] && "${SCRIPT}"
         done
