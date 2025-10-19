@@ -6,10 +6,10 @@
 alias here='pwd && LC_ALL=C LC_COLLATE=C ls -haF --group-directories-first'
 
 # See where all the disk space is going
-alias bloat='du -hc --max-depth=1'
+alias bloat='du -hc --max-depth=1 | sort -hr'
 
 # See where all the disk space is going, quietly
-alias qbloat='function _qbloat() { du -hc --max-depth=1 "${1:-.}" 2>&1 | grep -v "cannot"; }; _qbloat'
+alias qbloat='function _qbloat() {du -hc --max-depth=1 "${1:-.}" 2>&1 | grep -v "cannot" | sort -hr;}; _qbloat'
 
 alias ll='ls -lha --color=auto'
 alias ls='ls --color=auto'
@@ -39,7 +39,7 @@ tmux-bcast() {
     local cmd=${1}
     tmux list-panes -s -F '#{session_name}:#{window_index}.#{pane_index}' | \
     while read -r pane; do
-        tmux send-keys -t "$pane" "${cmd} && clear" C-m
+        tmux send-keys -t "$pane" "${cmd}" C-m
     done
 }
 
