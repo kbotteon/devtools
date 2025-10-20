@@ -89,7 +89,7 @@ if [[ -n ${GIT_PROMPT} ]]; then
     # Add Git status to the command line
     setopt PROMPT_SUBST
     # export PROMPT="${PS1_PROMPT} ${CLR_CYN}\$(__git_ps1 '(%s)')${CLR_END}${PS1_NEWL}${CLR_CYN}└──> ${CLR_END}"
-    export PROMPT="${CLR_GRY}${PS1_PREFIX}${CLR_END}${PS1_PROMPT} ${CLR_CYAN}\$(__git_ps1 '[%s]')\$(get_venv)${PS1_NEWL}${PS1_DECORATOR} ${CLR_END}"
+    export PROMPT="${CLR_GRY}${PS1_PREFIX}${CLR_END}${PS1_PROMPT} ${CLR_CYN}\$(__git_ps1 '[%s]')\$(get_venv)${PS1_NEWL}${PS1_DECORATOR} ${CLR_END}"
 # Otherwise use the default PS1
 else
     export PROMPT="${PS1_PROMPT}${PS1_NEWL}${CLR_CYN}└──> ${CLR_END}"
