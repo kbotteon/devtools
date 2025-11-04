@@ -4,21 +4,29 @@ ARG USERNAME=developer
 
 RUN dpkg --add-architecture i386
 
-# Install basic build tools
+# Install build and development tools
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
     build-essential \
+    bzip2 \
     clang \
     clang-format \
     cmake \
+    gcc \
+    gcc-multilib \
     gdb \
     git \
     git-lfs \
     gzip \
+    libtool \
     less \
+    libtools \
+    llvm \
     make \
     net-tools \
     netcat-openbsd \
     openjdk-21-jdk \
+    pkg-config \
+    portmap \
     python3 \
     python3-dev \
     python3-pip \
