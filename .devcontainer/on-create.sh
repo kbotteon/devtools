@@ -3,7 +3,8 @@
 # \brief On-create setup to run as user specified in Dockerfile
 ################################################################################
 
-WS='/persist/sandboxes'
+LV='/persist'
+WS="${LV}/sandboxes"
 PKG="${WS}/devtools"
 
 #-------------------------------------------------------------------------------
@@ -14,8 +15,10 @@ PKG="${WS}/devtools"
 sudo chown -R $(whoami): /persist
 mkdir -p ${WS}
 
-# Create symlinks for easy access
-mkdir -p ${WS}/.mounts && ln -sf /persist/home ${WS}/.mounts/home
+# Rebuilds will nest a new home skeleton, but we want to keep the existing one
+if [ -d "${HOME}/home" ]; then
+    rm -rf "${HOME}/home"
+fi
 
 # Devcontainers seems to force /workspaces bind mounts in Codespaces, so use
 # a symlink to make it work locally and remotely all the same
@@ -24,7 +27,8 @@ if [ -d "/workspaces/devtools" ]; then
 fi
 
 # Make a persistent bin directory to put applications in
-mkdir -p ${WS}/.bin
+BIN=${LV}/bin
+mkdir -p ${BIN}
 
 # Remove unused default directories
 rmdir ${HOME}/{Documents,Music,Pictures,Public,Templates,Videos} 2>/dev/null || true
@@ -60,7 +64,7 @@ echo "
 " >> ${HOME}/.gitconfig
 
 #-------------------------------------------------------------------------------
-# GUI Apps
+# GUI
 #-------------------------------------------------------------------------------
 
 # VNC
@@ -72,8 +76,8 @@ cp ${PKG}/vnc/xstartup-xfce ${HOME}/.vnc/xstartup
 curl -o /tmp/firefox.tar.xz https://download-installer.cdn.mozilla.net/pub/firefox/releases/139.0.4/linux-x86_64/en-US/firefox-139.0.4.tar.xz
 (
     cd /tmp
-    tar -xvf firefox.tar.xz -C ${WS}/.bin
-    ln -sf ${WS}/.bin/firefox/firefox ${WS}/.bin/start-firefox
+    tar -xvf firefox.tar.xz -C ${BIN}
+    ln -sf ${BIN}/firefox/firefox ${BIN}/start-firefox
 )
 
 #-------------------------------------------------------------------------------

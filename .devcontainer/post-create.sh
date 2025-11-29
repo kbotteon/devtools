@@ -5,7 +5,7 @@
 ################################################################################
 
 # Set this if you want to self-invoke as root
-RUN_AS_ROOT=1
+RUN_AS_ROOT=0
 
 # Self-invoke as root if not already
 if [ "$EUID" -ne 0 ] && [ "$RUN_AS_ROOT" -ne 0 ]; then

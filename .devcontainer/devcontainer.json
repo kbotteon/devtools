@@ -43,5 +43,5 @@
         "seccomp=unconfined"
     ],
     "waitFor": "onCreateCommand",
-    "workspaceFolder": "/persist/sandboxes"
+    "workspaceFolder": "/persist"
 }

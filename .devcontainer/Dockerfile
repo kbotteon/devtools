@@ -14,7 +14,6 @@ RUN if [ -n "$APT_PROXY" ]; then \
       fi; \
     fi
 
-
 RUN dpkg --add-architecture i386
 
 # Force US mirrors
