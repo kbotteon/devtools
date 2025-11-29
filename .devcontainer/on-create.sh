@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 ################################################################################
-# \brief Post-creation setup to run as user specified in Dockerfile
-# \warning This is NOT run as root
+# \brief On-create setup to run as user specified in Dockerfile
 ################################################################################
 
 WS='/persist/sandboxes'
@@ -11,8 +10,18 @@ PKG="${WS}/devtools"
 # Filesystem
 #-------------------------------------------------------------------------------
 
+# Set up the volume mount
+sudo chown -R $(whoami): /persist
+mkdir -p ${WS}
+
 # Create symlinks for easy access
 mkdir -p ${WS}/.mounts && ln -sf /persist/home ${WS}/.mounts/home
+
+# Devcontainers seems to force /workspaces bind mounts in Codespaces, so use
+# a symlink to make it work locally and remotely all the same
+if [ -d "/workspaces/devtools" ]; then
+    ln -sfn /workspaces/devtools /persist/sandboxes/devtools
+fi
 
 # Make a persistent bin directory to put applications in
 mkdir -p ${WS}/.bin
@@ -73,11 +82,14 @@ curl -o /tmp/firefox.tar.xz https://download-installer.cdn.mozilla.net/pub/firef
 
 mkdir -p ${HOME}/.ssh && chmod 700 ${HOME}/.ssh
 
-echo "# Access all of your repos by adding a key called {USER}@github.com
-Host github.com
-    User git
-    IdentityFile ~/.ssh/${GITHUB_USER}@github.com
-" >> ${HOME}/.ssh/config
+# This only works in Codespaces, not local builds
+if [[ -n ${GITHUB_USER} ]]; then
+    echo "# Access all of your repos by adding a key called {USER}@github.com
+    Host github.com
+        User git
+        IdentityFile ~/.ssh/${GITHUB_USER}@github.com
+    " >> ${HOME}/.ssh/config
+fi
 
 #-------------------------------------------------------------------------------
 # Preferences

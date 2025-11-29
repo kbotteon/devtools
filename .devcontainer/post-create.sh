@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 ################################################################################
-# Serializes post-create commands
+# \brief Project-specific environment setup, run after image creation
+# \warning Do not run this as root from devcontainer.json; it self-invokes as root
 ################################################################################
-set -e
 
-sudo chown -R $(whoami): /persist
+# Set this if you want to self-invoke as root
+RUN_AS_ROOT=1
 
-mkdir -p /persist/sandboxes
-[ -L /persist/sandboxes/devtools ] || ln -sfn /workspaces/devtools /persist/sandboxes/devtools
-
-/bin/bash /persist/sandboxes/devtools/.devcontainer/environment.sh
-/bin/bash /persist/sandboxes/devtools/.devcontainer/project.sh
+# Self-invoke as root if not already
+if [ "$EUID" -ne 0 ] && [ "$RUN_AS_ROOT" -ne 0 ]; then
+  exec sudo /bin/bash "$(realpath "$0")" "$@"
+fi

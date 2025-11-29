@@ -1,11 +1,9 @@
 FROM ubuntu:24.04
 
 ARG USERNAME=developer
-
-RUN dpkg --add-architecture i386
+ARG APT_PROXY=""
 
 # Use a local apt proxy, if it exists
-ARG APT_PROXY=""
 RUN if [ -n "$APT_PROXY" ]; then \
       PROXY_HOST=$(echo "$APT_PROXY" | sed -E 's|https?://([^:/]+).*|\1|'); \
       PROXY_PORT=$(echo "$APT_PROXY" | sed -E 's|.*:([0-9]+).*|\1|'); \
@@ -15,6 +13,9 @@ RUN if [ -n "$APT_PROXY" ]; then \
         echo 'APT::Acquire::Retries "3";' >> /etc/apt/apt.conf.d/01proxy; \
       fi; \
     fi
+
+
+RUN dpkg --add-architecture i386
 
 # Force US mirrors
 RUN sed -i 's|http://archive.ubuntu.com|http://us.archive.ubuntu.com|g' /etc/apt/sources.list.d/ubuntu.sources
@@ -68,8 +69,13 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Make a non-root user and allow sudo without password
+# /persist is a volume mount provided by devcontainer.json
 RUN useradd -m -d /persist/home -s /bin/zsh $USERNAME && \
     usermod -aG sudo $USERNAME && \
     echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
+
+# These are historically a raging pain to interact with via devcontainer.json,
+# so place them inside the container here and invoke elsewhere
+COPY --chmod=755 on-create.sh post-create.sh /usr/local/bin/
 
 USER $USERNAME
