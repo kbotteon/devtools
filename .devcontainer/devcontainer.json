@@ -1,5 +1,8 @@
 {
     "build": {
+        "args": {
+          "APT_PROXY": "http://host.docker.internal:3142"
+        },
         "context": ".",
         "dockerfile": "./Dockerfile"
     },
@@ -33,17 +36,12 @@
     "mounts": [
         "source=lv,target=/persist,type=volume"
     ],
-    "postCreateCommand": {
-        "Own Volumes": "sudo chown -R $(whoami): /persist",
-        "Run Core Environment Setup": "/persist/sandboxes/devtools/.devcontainer/environment.sh",
-        "Run Project Setup": "/persist/sandboxes/devtools/.devcontainer/project.sh"
-    },
+    "postCreateCommand": "/bin/bash /workspaces/devtools/.devcontainer/post-create.sh",
     "remoteUser": "developer",
     "runArgs": [ // For C++ Debuggers
         "--cap-add=SYS_PTRACE",
         "--security-opt",
         "seccomp=unconfined"
     ],
-    "workspaceFolder": "/persist/sandboxes",
-    "workspaceMount": "source=${localWorkspaceFolder},target=/persist/sandboxes/devtools,type=bind,consistency=cached"
+    "workspaceFolder": "/persist/sandboxes/devtools"
 }

@@ -83,7 +83,8 @@ Host github.com
 # Preferences
 #-------------------------------------------------------------------------------
 
-ln -s ${PKG}/.config/procps/toprc ${HOME}/.config/procps/toprc
-ln -s ${PKG}/.config/.tmux.conf ${HOME}/.tmux.conf
+mkdir -p ${HOME}/.config/procps
+ln -sf ${PKG}/.config/procps/toprc ${HOME}/.config/procps/toprc
+ln -sf ${PKG}/.config/.tmux.conf ${HOME}/.tmux.conf
 
 #-------------------------------------------------------------------------------

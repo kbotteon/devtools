@@ -4,6 +4,17 @@ ARG USERNAME=developer
 
 RUN dpkg --add-architecture i386
 
+# Use a local apt proxy, if it exists
+ARG APT_PROXY=""
+RUN if [ -n "$APT_PROXY" ] && timeout 2 bash -c "</dev/tcp/host.docker.internal/3142" 2>/dev/null; then \
+      echo "Acquire::http::Proxy \"$APT_PROXY\";" > /etc/apt/apt.conf.d/01proxy && \
+      echo 'Acquire::http::Pipeline-Depth "4";' >> /etc/apt/apt.conf.d/01proxy && \
+      echo 'APT::Acquire::Retries "3";' >> /etc/apt/apt.conf.d/01proxy; \
+    fi
+
+# Force US mirrors
+RUN sed -i 's|http://archive.ubuntu.com|http://us.archive.ubuntu.com|g' /etc/apt/sources.list.d/ubuntu.sources
+
 # Install build and development tools
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
     build-essential \
