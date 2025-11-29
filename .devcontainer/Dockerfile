@@ -6,10 +6,14 @@ RUN dpkg --add-architecture i386
 
 # Use a local apt proxy, if it exists
 ARG APT_PROXY=""
-RUN if [ -n "$APT_PROXY" ] && timeout 2 bash -c "</dev/tcp/host.docker.internal/3142" 2>/dev/null; then \
-      echo "Acquire::http::Proxy \"$APT_PROXY\";" > /etc/apt/apt.conf.d/01proxy && \
-      echo 'Acquire::http::Pipeline-Depth "4";' >> /etc/apt/apt.conf.d/01proxy && \
-      echo 'APT::Acquire::Retries "3";' >> /etc/apt/apt.conf.d/01proxy; \
+RUN if [ -n "$APT_PROXY" ]; then \
+      PROXY_HOST=$(echo "$APT_PROXY" | sed -E 's|https?://([^:/]+).*|\1|'); \
+      PROXY_PORT=$(echo "$APT_PROXY" | sed -E 's|.*:([0-9]+).*|\1|'); \
+      if timeout 2 bash -c "</dev/tcp/${PROXY_HOST}/${PROXY_PORT}" 2>/dev/null; then \
+        echo "Acquire::http::Proxy \"$APT_PROXY\";" > /etc/apt/apt.conf.d/01proxy && \
+        echo 'Acquire::http::Pipeline-Depth "4";' >> /etc/apt/apt.conf.d/01proxy && \
+        echo 'APT::Acquire::Retries "3";' >> /etc/apt/apt.conf.d/01proxy; \
+      fi; \
     fi
 
 # Force US mirrors
