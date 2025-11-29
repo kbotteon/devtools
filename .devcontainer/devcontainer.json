@@ -34,7 +34,7 @@
         "storage": "16gb"
     },
     "mounts": [
-        "source=lv,target=/persist,type=volume"
+        "source=devtools-persist,target=/persist,type=volume"
     ],
     "postCreateCommand": "/bin/bash /workspaces/devtools/.devcontainer/post-create.sh",
     "remoteUser": "developer",
