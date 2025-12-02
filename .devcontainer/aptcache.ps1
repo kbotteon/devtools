@@ -8,6 +8,7 @@ FROM debian:bookworm-slim
 RUN apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y apt-cacher-ng && \
     rm -rf /var/lib/apt/lists/* && \
+    echo 'PassThroughPattern: .*' >> /etc/apt-cacher-ng/acng.conf && \
     chown -R apt-cacher-ng:apt-cacher-ng /var/cache/apt-cacher-ng && \
     chmod 755 /var/cache/apt-cacher-ng
 EXPOSE 3142
