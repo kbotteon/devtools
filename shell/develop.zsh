@@ -166,6 +166,9 @@ if [[ -n ${DTC_USE_LOCAL_PYTHON} ]] && [[ -f ${HOME}/.local/bin ]]; then
     export PATH=$PATH:${HOME}/.local/bin
 fi
 
+# Set DTC_EXISTS to this script's directory
+export DTC_EXISTS="${0:A:h:h}"
+
 ################################################################################
 
 # If we moved around for some reason, go back to where we started

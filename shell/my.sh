@@ -14,8 +14,9 @@ alias qbloat='function _qbloat() {du -hc --max-depth=1 "${1:-.}" 2>&1 | grep -v 
 alias ll='ls -lha --color=auto'
 alias ls='ls --color=auto'
 
-xfer() {
-    rsync -v --progress ${1} ${2}
+# Remote Copy
+rcp() {
+    rsync -az --no-owner --no-group --info=progress2 ${1} ${2}
 }
 
 # ------------------------------------------------------------------------------
@@ -43,27 +44,6 @@ tmux-bcast() {
     done
 }
 
-# A 5-pane tmux session
-matrix() {
-    local sname="matrix"
-    if [[ -n ${1} ]]; then
-        sname="${1}"
-    fi
-    printf '\e[8;80;300t'
-    tmux new-session -s "${sname}" \; \
-        split-window -h \; \
-        select-pane -t 0 \; \
-        split-window -v \; \
-        select-pane -t 2 \; \
-        split-window -p 33 \; \
-        select-pane -t 2 \; \
-        split-window -v \; \
-        select-pane -t 0 \; \
-        set -g monitor-bell off \; \
-        set -g mouse on \; \
-        set -g pane-active-border-style fg=red
-}
-
 # ------------------------------------------------------------------------------
 # Application Management
 # ------------------------------------------------------------------------------
@@ -72,3 +52,5 @@ if [[ "${OSTYPE}" == "darwin"* ]]; then
     # Launch new VS Code windows from terminal
     alias vscode='open -n -a "Visual Studio Code"'
 fi
+
+# ------------------------------------------------------------------------------
