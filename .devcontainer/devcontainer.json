@@ -30,7 +30,8 @@
     "hostRequirements": {
         "cpus": 4,
         "memory": "8gb",
-        "storage": "16gb"
+        "storage": "16gb",
+        "gpu": "optional"
     },
     "mounts": [
         "source=devtools-persist,target=/persist,type=volume"

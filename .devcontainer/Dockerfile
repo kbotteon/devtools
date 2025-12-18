@@ -43,6 +43,7 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
     portmap \
     python3 \
     python3-dev \
+    python3-env \
     python3-pip \
     rsync \
     screen \
