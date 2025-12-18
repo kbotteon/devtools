@@ -113,7 +113,7 @@ fi
 ################################################################################
 
 # Share a history file across all sessions that use this script
-export HISTFILE=${HOME}/.devtools/history
+export HISTFILE=${HOME}/.config/devtools/history
 
 # Keep a long history; sometimes we need that obscure command from last month
 if [[ "${DTC_HISTSIZE}" -gt 0 ]]; then
