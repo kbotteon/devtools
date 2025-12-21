@@ -42,7 +42,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ghcr.io/${{ github.repository }}/devcontainer
+          images: ghcr.io/${{ github.repository }}/devtools
           flavor: |
             latest=auto
             suffix=${{ inputs.tag_suffix }}
