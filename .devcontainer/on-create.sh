@@ -78,6 +78,7 @@ curl -o /tmp/firefox.tar.xz https://download-installer.cdn.mozilla.net/pub/firef
     cd /tmp
     tar -xvf firefox.tar.xz -C ${BIN}
     ln -sf ${BIN}/firefox/firefox ${BIN}/start-firefox
+    ln -sf ${BIN}/firefox/firefox ${HOME}/Desktop/start-firefox
 )
 
 #-------------------------------------------------------------------------------

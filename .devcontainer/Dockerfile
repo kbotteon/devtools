@@ -45,6 +45,7 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
     python3-dev \
     python3-venv \
     python3-pip \
+    pv \
     rsync \
     screen \
     socat \
