@@ -14,10 +14,16 @@
 
 STARTING_DIR=$(pwd)
 SCRIPT_DIR=$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")
+CFG_DIR=${HOME}/.config/devtools
 
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
     echo "This script should be sourced, not executed"
     exit 1
+fi
+
+# If there is a host definition file, source it
+if [[ -f "${CFG_DIR}/config" ]]; then
+    source "${CFG_DIR}/config"
 fi
 
 ################################################################################
@@ -34,11 +40,6 @@ else
   SCRIPT_ARG1=${1,,}
 fi
 
-# If there is a host definition file, source it
-# We always expect it to be in a user's home directory
-if [[ -f "${HOME}/.devtools/config" ]]; then
-    source "${HOME}/.devtools/config"
-fi
 
 ################################################################################
 # Setup Prompt
@@ -51,8 +52,9 @@ CLR_RED='\[\033[01;31m\]'
 CLR_END='\[\033[00m\]'
 
 # A colorized prompt with user@host:full_path
+: ${DTC_FRIENDLY_NAME:=$(hostname -s)}
 PS1_TITLE='\[\e]0;\u@\h:\w\a\]'
-PS1_PROMPT="\u@${CLR_RED}\h${CLR_END}:\w"
+PS1_PROMPT="\u@${CLR_RED}${DTC_FRIENDLY_NAME}${CLR_END}:\w"
 
 # If the script to format the prompt with git info exists, locate it
 # Generic Linux
@@ -100,7 +102,7 @@ fi
 ################################################################################
 
 # Share a history file across all active Bash sessions using this script
-export HISTFILE=${HOME}/.config/devtools/history
+export HISTFILE=${CFG_DIR}/history
 
 # Keep a long history; sometimes we need that obscure command from last month
 if [[ "${DTC_HISTSIZE}" -gt 0 ]]; then
@@ -122,7 +124,7 @@ fi
 if [[ -n ${DTC_RUN_LOGIN} ]]; then
     if shopt -q login_shell; then
         # Collect the scripts in .login
-        for SCRIPT in ${HOME}/.login/*.sh; do
+        for SCRIPT in ${CFG_DIR}/login/*.sh; do
             # Run only executable files
             [ -f "${SCRIPT}" ] && [ -x "${SCRIPT}" ] && "${SCRIPT}"
         done

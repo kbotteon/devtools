@@ -14,10 +14,16 @@
 
 START_DIR=$(pwd)
 SCRIPT_DIR=$(dirname "$(readlink -f "${(%):-%x}")")
+CFG_DIR=${HOME}/.config/devtools
 
 if [[ 0 -eq 1 ]]; then
     echo "This script should be sourced, not executed"
     return 1
+fi
+
+# If there is a host definition file, source it
+if [[ -f "${CFG_DIR}/config" ]]; then
+    source "${CFG_DIR}/config"
 fi
 
 ################################################################################
@@ -32,11 +38,6 @@ if [[ -z $1 ]]; then
 else
   # Transform to lowercase
   SCRIPT_ARG1=${1:l}
-fi
-
-# If there is a host definition file, source it
-if [[ -f "${HOME}/.devtools/config" ]]; then
-    source "${HOME}/.devtools/config"
 fi
 
 ################################################################################
@@ -113,7 +114,7 @@ fi
 ################################################################################
 
 # Share a history file across all sessions that use this script
-export HISTFILE=${HOME}/.config/devtools/history
+export HISTFILE=${CFG_DIR}/history
 
 # Keep a long history; sometimes we need that obscure command from last month
 if [[ "${DTC_HISTSIZE}" -gt 0 ]]; then
@@ -150,7 +151,7 @@ fi
 if [[ -n ${DTC_RUN_LOGIN} ]]; then
     if [[ -o login ]] || [[ -n $PS1 ]]; then
         # Collect the scripts in .login
-        for SCRIPT in ${HOME}/.config/devtools/login/*; do
+        for SCRIPT in ${CFG_DIR}/login/*; do
             # Run only executable files
             [ -f "${SCRIPT}" ] && [ -x "${SCRIPT}" ] && "${SCRIPT}"
         done
