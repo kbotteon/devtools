@@ -41,6 +41,8 @@
     "remoteUser": "developer",
     "runArgs": [
         "--cap-add=SYS_PTRACE",
+        "--cap-add=NET_ADMIN",
+        "--device=/dev/net/tun",
         "--security-opt",
         "seccomp=unconfined"
     ],
