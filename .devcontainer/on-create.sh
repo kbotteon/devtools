@@ -4,8 +4,12 @@
 ################################################################################
 
 LV='/persist'
+
 WS="${LV}/sandboxes"
 PKG="${WS}/devtools"
+
+BIN=${LV}/.tools   # For binaires to be downloaded and placed
+TOOLS=${LV}/.local # For the configure/install prefix when building from source
 
 #-------------------------------------------------------------------------------
 # Filesystem
@@ -26,9 +30,8 @@ if [ -d "/workspaces/devtools" ]; then
     ln -sfn /workspaces/devtools /persist/sandboxes/devtools
 fi
 
-# Make a persistent bin directory to put applications in
-BIN=${LV}/bin
 mkdir -p ${BIN}
+mkdir -p ${TOOLS}
 
 # Remove unused default directories
 rmdir ${HOME}/{Documents,Music,Pictures,Public,Templates,Videos} 2>/dev/null || true
@@ -39,19 +42,22 @@ rmdir ${HOME}/{Documents,Music,Pictures,Public,Templates,Videos} 2>/dev/null || 
 
 # This *is* the tools repo Codespace, so we don't need to clone it
 # cd ${WS} && git clone https://github.com/kbotteon/devtools.git
-mkdir -p ${HOME}/.devtools
-touch ${HOME}/.devtools/history
+mkdir -p ${HOME}/.config/devtools
+touch ${HOME}/.config/devtools/history
 
 # Default devtools config
 echo "
 export DTC_CLEAN_HISTORY=1
 source ${PKG}/shell/my.sh
-" >> ${HOME}/.devtools/config
+" >> ${HOME}/.config/devtools/config
 
 # Source devtools in every shell
 echo "# Grab devtools in every shell
 source ${PKG}/shell/develop.zsh
 " >> ${HOME}/.zshrc
+
+# Make devtools available at ${HOME} for scripts that reference it
+ln -s ${WS}/devtools ${HOME}/devtools
 
 #-------------------------------------------------------------------------------
 # Git

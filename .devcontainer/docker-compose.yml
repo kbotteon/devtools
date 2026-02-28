@@ -1,0 +1,33 @@
+services:
+  devcontainer:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        APT_PROXY: "http://host.docker.internal:3142"
+    cap_add:
+      - SYS_PTRACE
+      - NET_ADMIN
+    devices:
+      - /dev/net/tun
+    ports:
+      - "50022:2222"
+    security_opt:
+      - seccomp:unconfined
+    volumes:
+      - devtools-persist:/persist
+    user: developer
+
+  devcontainer-gpu:
+    extends:
+      service: devcontainer
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+
+volumes:
+  devtools-persist:
