@@ -57,7 +57,7 @@ source ${PKG}/shell/develop.zsh
 " >> ${HOME}/.zshrc
 
 # Make devtools available at ${HOME} for scripts that reference it
-ln -s ${WS}/devtools ${HOME}/devtools
+ln -sfn ${WS}/devtools ${HOME}/devtools
 
 #-------------------------------------------------------------------------------
 # Git
@@ -83,8 +83,8 @@ curl -o /tmp/firefox.tar.xz https://download-installer.cdn.mozilla.net/pub/firef
 (
     cd /tmp
     tar -xvf firefox.tar.xz -C ${BIN}
-    ln -sf ${BIN}/firefox/firefox ${BIN}/start-firefox
-    ln -sf ${BIN}/firefox/firefox ${HOME}/Desktop/start-firefox
+    ln -sf ${BIN}/firefox/firefox ${BIN}/Firefox
+    ln -sf ${BIN}/firefox/firefox ${HOME}/Desktop/Firefox
 )
 
 #-------------------------------------------------------------------------------
