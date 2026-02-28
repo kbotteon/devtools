@@ -3,7 +3,7 @@ name: Devcontainer Prebuilds
 on:
   push:
     branches:
-      - devel
+      - main
     paths:
       - '.devcontainer/**'
   workflow_dispatch:
