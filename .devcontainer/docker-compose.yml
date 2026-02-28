@@ -21,6 +21,8 @@ services:
   devcontainer-gpu:
     extends:
       service: devcontainer
+    profiles:
+      - gpu
     deploy:
       resources:
         reservations:
