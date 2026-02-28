@@ -5,6 +5,7 @@ services:
       dockerfile: Dockerfile
       args:
         APT_PROXY: "http://host.docker.internal:3142"
+    command: sleep infinity
     cap_add:
       - SYS_PTRACE
       - NET_ADMIN
