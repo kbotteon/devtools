@@ -35,5 +35,4 @@ services:
 
 volumes:
   devtools-persist:
-    external: true
     name: devtools-persist
