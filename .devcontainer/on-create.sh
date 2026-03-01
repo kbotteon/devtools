@@ -8,8 +8,8 @@ LV='/persist'
 WS="${LV}/sandboxes"
 PKG="${WS}/devtools"
 
-BIN=${LV}/.tools   # For binaires to be downloaded and placed
-TOOLS=${LV}/.local # For the configure/install prefix when building from source
+CPYBIN=${LV}/.tools # For binaires to be downloaded and placed
+USRBIN=${LV}/.local # For the configure/install prefix when building from source
 
 #-------------------------------------------------------------------------------
 # Filesystem
@@ -25,16 +25,19 @@ if [ -d "${HOME}/home" ]; then
 fi
 
 # Devcontainers seems to force /workspaces bind mounts in Codespaces, so use
-# a symlink to make it work locally and remotely all the same
+# a symlink to make sandboxes make sense, otherwise clone if local
 if [ -d "/workspaces/devtools" ]; then
-    ln -sfn /workspaces/devtools /persist/sandboxes/devtools
+    ln -sfn /workspaces/devtools ${WS}/devtools
+else
+    git clone https://github.com/kbotteon/devtools.git ${WS}/devtools
 fi
 
-mkdir -p ${BIN}
-mkdir -p ${TOOLS}
+mkdir -p ${CPYBIN}
+mkdir -p ${USRBIN}
 
-# Remove unused default directories
+# Remove unused default directories; create ones that might not exist
 rmdir ${HOME}/{Documents,Music,Pictures,Public,Templates,Videos} 2>/dev/null || true
+mkdir -p ${HOME}/Desktop
 
 #-------------------------------------------------------------------------------
 # Devtools
@@ -82,9 +85,9 @@ cp ${PKG}/vnc/xstartup-xfce ${HOME}/.vnc/xstartup
 curl -o /tmp/firefox.tar.xz https://download-installer.cdn.mozilla.net/pub/firefox/releases/139.0.4/linux-x86_64/en-US/firefox-139.0.4.tar.xz
 (
     cd /tmp
-    tar -xvf firefox.tar.xz -C ${BIN}
-    ln -sf ${BIN}/firefox/firefox ${BIN}/Firefox
-    ln -sf ${BIN}/firefox/firefox ${HOME}/Desktop/Firefox
+    tar -xvf firefox.tar.xz -C ${CPYBIN}
+    ln -sf ${CPYBIN}/firefox/firefox ${CPYBIN}/Firefox
+    ln -sf ${CPYBIN}/firefox/firefox ${HOME}/Desktop/Firefox
 )
 
 #-------------------------------------------------------------------------------
