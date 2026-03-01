@@ -1,7 +1,4 @@
 {
-    "dockerComposeFile": "docker-compose.yml",
-    "service": "devcontainer",
-    "shutdownAction": "stopCompose",
     "customizations": {
         "vscode": {
             "extensions": [
@@ -17,14 +14,15 @@
             }
         }
     },
+    "dockerComposeFile": "docker-compose.yml",
     "features": {
         "ghcr.io/devcontainers/features/sshd:1": {}
     },
     "hostRequirements": {
         "cpus": 2,
+        "gpu": "optional",
         "memory": "4gb",
-        "storage": "8gb",
-        "gpu": "optional"
+        "storage": "8gb"
     },
     "onCreateCommand": "/usr/local/bin/on-create.sh || true",
     "portsAttributes": {
@@ -35,6 +33,8 @@
     },
     "postCreateCommand": "/usr/local/bin/post-create.sh || true",
     "remoteUser": "developer",
+    "service": "devcontainer",
+    "shutdownAction": "stopCompose",
     "waitFor": "onCreateCommand",
     "workspaceFolder": "/persist"
 }
