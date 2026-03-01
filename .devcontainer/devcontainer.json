@@ -20,7 +20,6 @@
     "features": {
         "ghcr.io/devcontainers/features/sshd:1": {}
     },
-    "forwardPorts": [2222],
     "hostRequirements": {
         "cpus": 4,
         "memory": "8gb",
@@ -31,7 +30,7 @@
     "portsAttributes": {
         "2222": {
             "label": "sshd",
-            "onAutoForward": "silent"
+            "onAutoForward": "ignore"
         }
     },
     "postCreateCommand": "/usr/local/bin/post-create.sh || true",
