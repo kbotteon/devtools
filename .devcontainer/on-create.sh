@@ -48,14 +48,14 @@ mkdir -p ${HOME}/Desktop
 mkdir -p ${HOME}/.config/devtools
 touch ${HOME}/.config/devtools/history
 
-# Default devtools config
+# Set default devtools config
 echo "
 export DTC_CLEAN_HISTORY=1
 source ${PKG}/shell/my.sh
 " >> ${HOME}/.config/devtools/config
 
 # Source devtools in every shell
-echo "# Grab devtools in every shell
+echo "
 source ${PKG}/shell/develop.zsh
 " >> ${HOME}/.zshrc
 
@@ -67,7 +67,6 @@ ln -sfn ${WS}/devtools ${HOME}/devtools
 #-------------------------------------------------------------------------------
 
 echo "
-# Include default Git setup
 [include]
     path = ${PKG}/git/.gitconfig
 " >> ${HOME}/.gitconfig
@@ -97,13 +96,16 @@ curl -o /tmp/firefox.tar.xz https://download-installer.cdn.mozilla.net/pub/firef
 mkdir -p ${HOME}/.ssh && chmod 700 ${HOME}/.ssh
 
 # This only works in Codespaces, not local builds
-if [[ -n ${GITHUB_USER} ]]; then
-    echo "# Access all of your repos by adding a key called {USER}@github.com
-    Host github.com
-        User git
-        IdentityFile ~/.ssh/${GITHUB_USER}@github.com
-    " >> ${HOME}/.ssh/config
+if [[ -z ${GITHUB_USER} ]]; then
+    GITHUB_USER='nobody'
 fi
+
+echo "
+# Access all of your repos by adding a key called ${GITHUB_USER}@github.com
+Host github.com
+    User git
+    IdentityFile ~/.ssh/${GITHUB_USER}@github.com
+" >> ${HOME}/.ssh/config
 
 #-------------------------------------------------------------------------------
 # Preferences

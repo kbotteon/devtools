@@ -86,13 +86,13 @@ get_venv() {
 
 # If we could find a Git prompt setup script, source it and update our PS1
 if [[ -n ${GIT_PROMPT} ]]; then
-    source "${GIT_PROMPT}"
     # Add Git status to the command line
+    source "${GIT_PROMPT}"
     setopt PROMPT_SUBST
     # export PROMPT="${PS1_PROMPT} ${CLR_CYN}\$(__git_ps1 '(%s)')${CLR_END}${PS1_NEWL}${CLR_CYN}└──> ${CLR_END}"
     export PROMPT="${CLR_GRY}${PS1_PREFIX}${CLR_END}${PS1_PROMPT} ${CLR_CYN}\$(__git_ps1 '[%s]')\$(get_venv)${PS1_NEWL}${PS1_DECORATOR} ${CLR_END}"
-# Otherwise use the default PS1
 else
+    # Otherwise use the default PS1
     export PROMPT="${PS1_PROMPT}${PS1_NEWL}${CLR_CYN}└──> ${CLR_END}"
 fi
 
@@ -119,7 +119,7 @@ export HISTFILE=${CFG_DIR}/history
 # Keep a long history; sometimes we need that obscure command from last month
 if [[ "${DTC_HISTSIZE}" -gt 0 ]]; then
     export HISTSIZE="${DTC_HISTSIZE}"
-    export HISTFILESIZE=${HISTSIZE}
+    export HISTFILESIZE=${DTC_HISTSIZE}
 else
     export HISTSIZE=1000
     export HISTFILESIZE=${HISTSIZE}
