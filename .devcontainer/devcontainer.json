@@ -16,13 +16,14 @@
     },
     "dockerComposeFile": "docker-compose.yml",
     "features": {
+        "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {},
         "ghcr.io/devcontainers/features/sshd:1": {}
     },
     "hostRequirements": {
         "cpus": 2,
         "gpu": "optional",
         "memory": "4gb",
-        "storage": "8gb"
+        "storage": "16gb"
     },
     "onCreateCommand": "/usr/local/bin/on-create.sh || true",
     "portsAttributes": {
