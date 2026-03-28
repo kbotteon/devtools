@@ -46,7 +46,7 @@ fi
 
 # Color escape sequences
 CLR_BLU='%F{blue}'
-CLR_CYN='%F{cyan}'
+CLR_CYN='%F{39}'
 CLR_RED='%F{red}'
 CLR_GRN=$'\033[32m'
 CLR_YLW=$'\033[33m'
@@ -80,7 +80,7 @@ export VIRTUAL_ENV_DISABLE_PROMPT=1
 PS1_DECORATOR=${DTC_PS1_DECORATOR:-"└──>"}
 
 CLR_BAR="${CLR_GRY}"
-CLR_CTX="${CLR_GRN}"
+CLR_CTX=$'\033[38;5;208m'
 
 get_ruler() {
     local w=$(tput cols)
@@ -91,12 +91,17 @@ get_ruler() {
 
 get_context() {
     local ctx=""
-    # Add a label for git branch, if in a repo
+    # Add a label for git branch/ref; ':' prefix denotes detached HEAD rather than '()' default
     if command -v __git_ps1 &>/dev/null; then
-        ctx+="$(__git_ps1 '[%s]')"
+        local git_info="$(__git_ps1 '%s')"
+        if [[ "$git_info" == \(*\) ]]; then
+            ctx+="[:${git_info//[()]/}]"
+        elif [[ -n "$git_info" ]]; then
+            ctx+="[${git_info}]"
+        fi
     fi
     # Add a label for venv, if active
-    if [[ -n "$VIRTUAL_ENV" ]]; then
+    if [[ -n "${VIRTUAL_ENV:-}" ]]; then
         ctx+=" ($(basename "$VIRTUAL_ENV"))"
     fi
     # Compose the prompt string
