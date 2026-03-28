@@ -1,6 +1,6 @@
 #!/usr/bin/env zsh
 ################################################################################
-# \brief Set up a comfortable shell and development environment
+# Set up a comfortable and consistent development environment
 #
 # Arguments:
 #   `-k` to set up ssh-agent with your SSH keys, e.g. for easy GitHub access
@@ -128,13 +128,13 @@ fi
 ################################################################################
 
 # Initialize LS_COLORS from the system database so `ls --color` works properly,
-# then override directory color from standard blue (34) to bright blue (94)
-# because standard ANSI blue is illegible on dark terminals
+# then override the dark blues so they're actually legible on a dark background
 if command -v dircolors &>/dev/null; then
     eval "$(dircolors -b)"
 fi
 
-export LS_COLORS="${LS_COLORS:+${LS_COLORS}:}di=01;94:ln=01;96"
+# 38;5;N = 256-color foreground N, 01 = bold; 27 = #005fff, 37 = #00afaf
+export LS_COLORS="${LS_COLORS:+${LS_COLORS}:}di=38;5;27:ln=01;38;5;37"
 
 # Init completion
 autoload -Uz compinit
