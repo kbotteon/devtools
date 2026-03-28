@@ -32,8 +32,11 @@ else
     git clone https://github.com/kbotteon/devtools.git ${WS}/devtools
 fi
 
+# A place to put local binaries and compiled libraries
+# Run 'ldconfig' after building with 'Prefix=/persist/.local'
 mkdir -p ${CPYBIN}
 mkdir -p ${USRBIN}
+printf "/persist/.local/lib\n" > /etc/ld.so.conf.d/persist-local.conf
 
 # Remove unused default directories; create ones that might not exist
 rmdir ${HOME}/{Documents,Music,Pictures,Public,Templates,Videos} 2>/dev/null || true
