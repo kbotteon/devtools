@@ -115,8 +115,8 @@ Host github.com
 #-------------------------------------------------------------------------------
 
 mkdir -p ${HOME}/.config/procps
-ln -sf ${PKG}/.config/procps/toprc ${HOME}/.config/procps/toprc
-ln -sf ${PKG}/.config/.tmux.conf ${HOME}/.tmux.conf
+ln -sf ${PKG}/config/procps/toprc ${HOME}/.config/procps/toprc
+ln -sf ${PKG}/config/tmux.conf ${HOME}/.tmux.conf
 
 if [ ! -d ~/.tmux/plugins/tpm ]; then
     git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
