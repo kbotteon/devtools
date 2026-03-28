@@ -36,7 +36,7 @@ fi
 # Run 'ldconfig' after building with 'Prefix=/persist/.local'
 mkdir -p ${CPYBIN}
 mkdir -p ${USRBIN}
-printf "/persist/.local/lib\n" > /etc/ld.so.conf.d/persist-local.conf
+printf "/persist/.local/lib\n" | sudo tee /etc/ld.so.conf.d/persist-local.conf > /dev/null
 
 # Remove unused default directories; create ones that might not exist
 rmdir ${HOME}/{Documents,Music,Pictures,Public,Templates,Videos} 2>/dev/null || true
