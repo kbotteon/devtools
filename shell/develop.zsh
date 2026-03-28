@@ -127,6 +127,15 @@ fi
 # Shell Behavior
 ################################################################################
 
+# Initialize LS_COLORS from the system database so `ls --color` works properly,
+# then override directory color from standard blue (34) to bright blue (94)
+# because standard ANSI blue is illegible on dark terminals
+if command -v dircolors &>/dev/null; then
+    eval "$(dircolors -b)"
+fi
+
+export LS_COLORS="${LS_COLORS:+${LS_COLORS}:}di=01;94:ln=01;96"
+
 # Init completion
 autoload -Uz compinit
 compinit
