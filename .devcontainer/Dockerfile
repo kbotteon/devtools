@@ -73,9 +73,11 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
 
 # Make a non-root user and allow sudo without password
 # /persist is a volume mount provided by devcontainer.json
+# 'gh ssh' requires default home location, so symlink it
 RUN useradd -m -d /persist/home -s /bin/zsh $USERNAME && \
     usermod -aG sudo $USERNAME && \
-    echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
+    echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers && \
+    ln -s /persist/home /home/$USERNAME
 
 # These are historically a raging pain to interact with via devcontainer.json,
 # so place them inside the container here and invoke elsewhere

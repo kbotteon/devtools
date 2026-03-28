@@ -8,7 +8,7 @@ LV='/persist'
 WS="${LV}/sandboxes"
 PKG="${WS}/devtools"
 
-CPYBIN=${LV}/.tools # For binaires to be downloaded and placed
+CPYBIN=${LV}/.tools # For binaries to be downloaded and placed
 USRBIN=${LV}/.local # For the configure/install prefix when building from source
 
 #-------------------------------------------------------------------------------

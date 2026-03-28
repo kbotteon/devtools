@@ -127,6 +127,10 @@ fi
 # Shell Behavior
 ################################################################################
 
+# Init completion
+autoload -Uz compinit
+compinit
+
 # Share a history file across all sessions that use this script
 export HISTFILE=${CFG_DIR}/history
 
