@@ -1,0 +1,7 @@
+set background=dark
+colorscheme elflord
+set t_Co=256
+syntax on
+set number
+set ruler
+set showmatch
