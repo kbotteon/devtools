@@ -1,12 +1,12 @@
-# This .gitconfig can be `include`d in your global configuration file, either
-# first or last depending on which way you'd like to override preferences, via
+# This .gitconfig can be included in your global configuration file, and you can
+# override any of these settings after the include:
 #
 # [include]
 #     path = /path/to/devtools/git/.gitconfig
 
 [alias]
     trail = log --oneline --decorate --stat --graph
-    last = show --stat --patch
+    last = show --stat --patch --format=%B
 
 [core]
     autocrlf = input
