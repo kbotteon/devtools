@@ -1,117 +1,118 @@
-#!/usr/bin/env bash -n
+#!/usr/bin/env bash
 ################################################################################
-# \brief Set up a consistent development environment
+# Set up a comfortable and consistent development environment
 #
 # Arguments:
-#   `-key` to set up ssh-agent with your SSH keys, e.g. for easy GitHub access
-#
-# This script will:
-#   - Set up ssh-agent and key(s) if requested
-#   - Reformat terminal colors and layout, including adding git status
-#   - Run user environment script, if it exists
+#   `-k` to set up ssh-agent with your SSH keys, e.g. for easy GitHub access
 #
 ################################################################################
 
-STARTING_DIR=$(pwd)
-SCRIPT_DIR=$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")
-CFG_DIR=${HOME}/.config/devtools
+#-------------------------------------------------------------------------------
+# Preamble
+#-------------------------------------------------------------------------------
 
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
     echo "This script should be sourced, not executed"
     exit 1
 fi
 
-# If there is a host definition file, source it
+START_DIR=$(pwd)
+SCRIPT_DIR=$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")
+CFG_DIR=${HOME}/.config/devtools
+
+# Source the user's host-specific configuration, if it exists
 if [[ -f "${CFG_DIR}/config" ]]; then
     source "${CFG_DIR}/config"
 fi
 
-################################################################################
-# Parse Arguments
-#
-# We actually only have one optional argument '-key' which loads SSH keys
-################################################################################
+# Optional first argument, e.g. '-k' for SSH keys
+SCRIPT_ARG1=${1:+${1,,}}
 
-# No argument defaults to no keys
-if [ -z $1 ]; then
-  SCRIPT_ARG1=""
-else
-  # Transform to lowercase
-  SCRIPT_ARG1=${1,,}
+#-------------------------------------------------------------------------------
+# Theme
+#-------------------------------------------------------------------------------
+
+CLR_INFO='\[\033[38;5;39m\]'   # INFO colorization; sapphire
+CLR_CTX='\033[38;5;208m'       # ATTN colorization; orange
+CLR_END='\[\033[0m\]'
+CLR_GRY='\033[90m'
+CLR_RST='\033[0m'
+# Wrapped variants for use inside PS1 $() calls
+W_CTX="\001${CLR_CTX}\002"
+W_GRY="\001${CLR_GRY}\002"
+W_RST="\001${CLR_RST}\002"
+
+# Initialize LS_COLORS from the system database, then override the standard
+# blues which are illegible on dark terminals
+if command -v dircolors &>/dev/null; then
+    eval "$(dircolors -b)"
 fi
 
+# 38;5;N = 256-color foreground N, 01 = bold; 27 = #005fff, 37 = #00afaf
+export LS_COLORS="${LS_COLORS:+${LS_COLORS}:}di=38;5;27:ln=01;38;5;37"
 
-################################################################################
-# Setup Prompt
-################################################################################
+#-------------------------------------------------------------------------------
+# Prompt
+#-------------------------------------------------------------------------------
 
-# Color escape sequences
-CLR_BLU='\[\033[01;34m\]'
-CLR_GRN='\[\033[01;32m\]'
-CLR_RED='\[\033[01;31m\]'
-CLR_END='\[\033[00m\]'
-
-# A colorized prompt with user@host:full_path
 : ${DTC_FRIENDLY_NAME:=$(hostname -s)}
-PS1_TITLE='\[\e]0;\u@\h:\w\a\]'
-PS1_PROMPT="\u@${CLR_RED}${DTC_FRIENDLY_NAME}${CLR_END}:\w"
+PS1_DECORATOR=${DTC_PS1_DECORATOR:-"└──>"}
+export VIRTUAL_ENV_DISABLE_PROMPT=1
 
-# If the script to format the prompt with git info exists, locate it
-# Generic Linux
-GIT_PROMPT_LOC_1='/usr/lib/git-core/git-sh-prompt'
-# Mac/HomeBrew
+# Locate git-prompt.sh for branch/tag display
 if command -v brew &>/dev/null; then
-    GIT_PROMPT_LOC_2="`brew --prefix git`/etc/bash_completion.d/git-prompt.sh"
-fi
-# RHEL
-GIT_PROMPT_LOC_3='/usr/share/git-core/contrib/completion/git-prompt.sh'
-
-if [ -f ${GIT_PROMPT_LOC_1} ]; then
-    GIT_PROMPT=${GIT_PROMPT_LOC_1}
-elif [ -f ${GIT_PROMPT_LOC_2} ]; then
-    GIT_PROMPT=${GIT_PROMPT_LOC_2}
-elif [ -f ${GIT_PROMPT_LOC_3} ]; then
-    GIT_PROMPT=${GIT_PROMPT_LOC_3}
+    GIT_PROMPT="$(brew --prefix git)/etc/bash_completion.d/git-prompt.sh"
+elif [[ -f '/usr/lib/git-core/git-sh-prompt' ]]; then
+    GIT_PROMPT='/usr/lib/git-core/git-sh-prompt'
+elif [[ -f '/usr/share/git-core/contrib/completion/git-prompt.sh' ]]; then
+    GIT_PROMPT='/usr/share/git-core/contrib/completion/git-prompt.sh'
 fi
 
-# If we could find a Git prompt setup script, source it and update our PS1
+__get_ruler() {
+    local w=$(tput cols)
+    printf '%b' "${W_GRY}"
+    printf -- '-%.0s' $(seq 2 $((w > 80 ? 80 : w)))
+    printf '%b' "${W_RST}"
+}
+
+__get_context() {
+    local ctx=""
+    # Git branch/ref; ':' prefix denotes detached HEAD
+    if command -v __git_ps1 &>/dev/null; then
+        local git_info="$(__git_ps1 '%s')"
+        if [[ "$git_info" == \(*\) ]]; then
+            ctx+="[:${git_info//[()]/}]"
+        elif [[ -n "$git_info" ]]; then
+            ctx+="[${git_info}]"
+        fi
+    fi
+    # Python venv, if active
+    if [[ -n "${VIRTUAL_ENV:-}" ]]; then
+        ctx+=" ($(basename "$VIRTUAL_ENV"))"
+    fi
+    if [[ -n "$ctx" ]]; then
+        printf '%b%s%b' "${W_CTX}" "${ctx}" "${W_RST}"
+    fi
+}
+
+PS1_TITLE='\[\e]0;\u@\h:\w\a\]'
+PS1_PROMPT="\u@${CLR_INFO}${DTC_FRIENDLY_NAME}${CLR_END}:\w"
+
 if [[ -n ${GIT_PROMPT} ]]; then
-    source ${GIT_PROMPT}
-    # Add Git status to the command line
-    export PS1="${PS1_TITLE}${PS1_PROMPT} ${CLR_RED}\$(__git_ps1 '(%s)')${CLR_END}\n└──> "
-# Otherwise use the default PS1
+    source "${GIT_PROMPT}"
+    export PS1="${PS1_TITLE}\$(__get_ruler)\n${PS1_PROMPT} \$(__get_context)\n${CLR_INFO}${PS1_DECORATOR} ${CLR_END}"
 else
-    export PS1="${PS1_TITLE}${PS1_PROMPT}\n└──> "
+    export PS1="${PS1_TITLE}${PS1_PROMPT}\n${CLR_INFO}${PS1_DECORATOR} ${CLR_END}"
 fi
 
-################################################################################
-# SSH Keys
-################################################################################
+#-------------------------------------------------------------------------------
+# Shell Behavior
+#-------------------------------------------------------------------------------
 
-# Start ssh-agent and add a key to avoid re-typing passwords for this session,
-# which can happen a lot since folks use Git submodules so much
-if [[ '-key' = ${SCRIPT_ARG1} ]]; then
-    source ${SCRIPT_DIR}/../lib/agent-helper.sh
-    echo "Agent in use is PID ${SSH_AGENT_PID}"
-    # Stop ssh-agent we started in this shell when exiting or SSH disconnects
-    trap 'test -n "${SSH_AGENT_PID}" && eval `ssh-agent -k`' EXIT HUP
-fi
-
-################################################################################
-# Shell Config
-################################################################################
-
-# Share a history file across all active Bash sessions using this script
+# History
 export HISTFILE=${CFG_DIR}/history
-
-# Keep a long history; sometimes we need that obscure command from last month
-if [[ "${DTC_HISTSIZE}" -gt 0 ]]; then
-    export HISTSIZE="${DTC_HISTSIZE}"
-    export HISTFILESIZE=${HISTSIZE}
-else
-    export HISTSIZE=1000
-    export HISTFILESIZE=${HISTSIZE}
-fi
+export HISTSIZE=${DTC_HISTSIZE:-1000}
+export HISTFILESIZE=${HISTSIZE}
 
 shopt -s histappend
 
@@ -120,36 +121,38 @@ if [[ -n ${DTC_SHARE_HISTORY} ]]; then
     PROMPT_COMMAND="history -a; ${PROMPT_COMMAND}"
 fi
 
-# Run login scripts, if it's a login shell
+# Prefer Homebrew tools to built-ins
+if [[ -n ${DTC_PREFER_HOMEBREW} ]]; then
+    export PATH=/opt/homebrew/opt/coreutils/libexec/gnubin:/opt/homebrew/bin:$PATH
+fi
+
+# Run login scripts in ${HOME}/.login, if it's a login shell
 if [[ -n ${DTC_RUN_LOGIN} ]]; then
     if shopt -q login_shell; then
-        # Collect the scripts in .login
-        for SCRIPT in ${CFG_DIR}/login/*.sh; do
-            # Run only executable files
+        for SCRIPT in ${CFG_DIR}/login/*; do
             [ -f "${SCRIPT}" ] && [ -x "${SCRIPT}" ] && "${SCRIPT}"
         done
     fi
 fi
 
-################################################################################
-# Host Setup
-################################################################################
+#-------------------------------------------------------------------------------
+# SSH Keys
+#-------------------------------------------------------------------------------
 
-# Set up Xilinx tools, if the roots were defined
-if [[ -n ${DTC_XILINX_ROOT} ]] && [[ -n ${DTC_XILINX_VERSION} ]]; then
-    export VITIS_ROOT=${DTC_XILINX_ROOT}/Vitis/${DTC_XILINX_VERSION}
-    export MICROBLAZE_BIN_DIR=${DTC_VITIS_ROOT}/gnu/microblaze/lin/bin
-    # Do **NOT** put all Xilinx tools on path by default because, for
-    # example, there is an old CMake included for Vivado that will cause
-    # problems with your other build systems
+if [[ '-k' = ${SCRIPT_ARG1} ]]; then
+    source ${SCRIPT_DIR}/../lib/agent-helper.sh
+    echo "Agent in use is PID ${SSH_AGENT_PID}"
+    trap 'test -n "${SSH_AGENT_PID}" && eval `ssh-agent -k`' EXIT HUP
 fi
 
-# Add user Python installs to path, if they exist
-if [ -f ${HOME}/.local/bin ]; then
+#-------------------------------------------------------------------------------
+# Environment
+#-------------------------------------------------------------------------------
+
+export DTC_EXISTS="$(dirname "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")")"
+
+if [[ -n ${DTC_USE_LOCAL_PYTHON} ]] && [[ -d ${HOME}/.local/bin ]]; then
     export PATH=$PATH:${HOME}/.local/bin
 fi
 
-################################################################################
-
-# If we moved around for some reason, go back to where we started
-cd $STARTING_DIR
+cd ${START_DIR}
