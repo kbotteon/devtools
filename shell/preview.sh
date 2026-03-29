@@ -6,7 +6,7 @@
 RST='\033[0m'
 GRY='\033[90m'
 USER=$(whoami)
-HOST=${DTC_FRIENDLY_NAME:-preview}
+HOST=${DTC_FRIENDLY_NAME:-random-buildhost}
 ARROW='└──>'
 
 # Full spectrum: blue → cyan → green → yellow → orange → red
@@ -19,7 +19,7 @@ for i in "${!colors[@]}"; do
     c=${colors[$i]}; w=${colors[$j]}
     I="\033[38;5;${c}m"; C="\033[38;5;${w}m"
     printf "  ${GRY}%2d${RST}) info=${I}%-3s${RST} ctx=${C}%-3s${RST}  " "$((i+1))" "$c" "$w"
-    printf "%s@${I}%s${RST}:~ ${C}[main]${RST} ${I}%s${RST}\n" "$USER" "$HOST" "$ARROW"
+    printf "%s@${I}%s${RST}:~ ${C}[main] (.venv)${RST} ${I}%s${RST}\n" "$USER" "$HOST" "$ARROW"
     echo ""
 done
 echo ""
