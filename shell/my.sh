@@ -6,17 +6,21 @@
 alias here='pwd && LC_ALL=C LC_COLLATE=C ls -haF --group-directories-first'
 
 # See where all the disk space is going
-alias bloat='du -hc --max-depth=1 | sort -hr'
-
-# See where all the disk space is going, quietly
-alias qbloat='function _qbloat() {du -hc --max-depth=1 "${1:-.}" 2>&1 | grep -v "cannot" | sort -hr;}; _qbloat'
+# --quiet to suppress permission errors
+bloat() {
+    if [[ "$1" == "--quiet" ]]; then
+        du -hc --max-depth=1 2>&1 | grep -v "cannot" | sort -hr
+    else
+        du -hc --max-depth=1 | sort -hr
+    fi
+}
 
 alias ll='ls -lha --color=auto'
 alias ls='ls --color=auto'
 
 # Remote Copy
 rcp() {
-    rsync -az --no-owner --no-group --info=progress2 ${1} ${2}
+    rsync -az --no-owner --no-group --info=progress2 "${1}" "${2}"
 }
 
 # ------------------------------------------------------------------------------
@@ -35,7 +39,7 @@ hgrep() {
     history | grep -i "$*"
 }
 
-# Source a script in all tmux panes
+# Run a command in all tmux panes
 tmux-bcast() {
     local cmd=${1}
     tmux list-panes -s -F '#{session_name}:#{window_index}.#{pane_index}' | \
