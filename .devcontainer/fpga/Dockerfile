@@ -7,8 +7,6 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-ins
     autoconf \
     bison \
     ccache \
-    dbus-x11 \
-    default-jre \
     dpkg-dev:i386 \
     flex \
     ghdl \
