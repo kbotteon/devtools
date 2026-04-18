@@ -8,14 +8,10 @@
     "customizations": {
         "vscode": {
             "extensions": [
-                "ms-vscode.cpptools-extension-pack",
-                "ms-python.python"
-            ],
-            "settings": {
-                "editor.renderWhitespace": "all",
-                "files.insertFinalNewline": true,
-                "files.trimTrailingWhitespace": true
-            }
+                "ms-vscode.cpptools",
+                "ms-python.python",
+                "streetsidesoftware.code-spell-checker"
+            ]
         }
     },
     "features": {

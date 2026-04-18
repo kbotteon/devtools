@@ -10,12 +10,7 @@
                 "ms-python.python",
                 "ms-python.debugpy",
                 "streetsidesoftware.code-spell-checker"
-            ],
-            "settings": {
-                "editor.renderWhitespace": "all",
-                "files.insertFinalNewline": true,
-                "files.trimTrailingWhitespace": true
-            }
+            ]
         }
     },
     "dockerComposeFile": "docker-compose.yml",

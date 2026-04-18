@@ -18,7 +18,6 @@ services:
       - seccomp:unconfined
     volumes:
       - devtools-persist:/persist
-    user: developer
 
   devcontainer-gpu:
     extends:
