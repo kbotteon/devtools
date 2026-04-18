@@ -1,5 +1,5 @@
 # Devtools sets up a pretty well-featured baseline environment
-FROM ghcr.io/kbotteon/devtools/devtools:latest
+FROM ghcr.io/kbotteon/devtools/base:latest
 USER root
 
 # Set up FPGA tool dependencies

@@ -1,4 +1,5 @@
 {
+    "name": "fpga",
     "build": {
         "context": ".",
         "dockerfile": "./Dockerfile"

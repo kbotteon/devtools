@@ -1,4 +1,5 @@
 {
+    "name": "base",
     "customizations": {
         "vscode": {
             "extensions": [
