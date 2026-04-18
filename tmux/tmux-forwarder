@@ -4,6 +4,8 @@ A tmux clipboard forwarder. Pair this with tmux-receiver.
 
 Wire format: [4U8:TMXC][1U8:Version][U32:Length][U32:CRC32][xU8:Payload]
 """
+import os
+import subprocess
 import sys
 import socket
 import struct
@@ -13,7 +15,12 @@ PORT        = 50024
 MAGIC       = b'TMXC'
 VERSION     = 1
 HEADER      = '!4sBII'  # magic, version, length, crc32
-MAX_PAYLOAD = 16 * 1024
+MAX_PAYLOAD = 128 * 1024
+
+def error(msg):
+    print(msg, file=sys.stderr)
+    if os.environ.get('TMUX'):
+        subprocess.run(['tmux', 'display-message', '-d', '4000', msg], check=False)
 
 def send_clipboard(data):
     header = struct.pack(HEADER, MAGIC, VERSION, len(data), zlib.crc32(data) & 0xFFFFFFFF)
@@ -24,15 +31,15 @@ def send_clipboard(data):
             sock.sendall(header + data)
 
     except socket.timeout:
-        print("tmux-forwarder: Connection timeout. Is tmux-receiver running?", file=sys.stderr)
+        error("tmux-forwarder: Connection timeout. Is tmux-receiver running?")
         sys.exit(1)
 
     except ConnectionRefusedError:
-        print("tmux-forwarder: Connection refused. Is RemoteForward tunnel open?", file=sys.stderr)
+        error("tmux-forwarder: Connection refused. Is RemoteForward tunnel open?")
         sys.exit(1)
 
     except Exception as e:
-        print(f"tmux-forwarder: Error: {e}", file=sys.stderr)
+        error(f"tmux-forwarder: Error: {e}")
         sys.exit(1)
 
 if __name__ == '__main__':
@@ -40,6 +47,6 @@ if __name__ == '__main__':
     if not data:
         sys.exit(0)
     if len(data) > MAX_PAYLOAD:
-        print(f"tmux-forwarder: Payload too large ({len(data)} > {MAX_PAYLOAD})", file=sys.stderr)
+        error(f"tmux-forwarder: Payload too large ({len(data)} > {MAX_PAYLOAD})")
         sys.exit(1)
     send_clipboard(data)

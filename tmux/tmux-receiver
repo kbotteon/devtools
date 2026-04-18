@@ -19,7 +19,7 @@ MAGIC       = b'TMXC'
 VERSION     = 1
 HEADER      = '!4sBII'  # magic, version, length, crc32
 HEADER_SIZE = struct.calcsize(HEADER)
-MAX_PAYLOAD = 16 * 1024
+MAX_PAYLOAD = 128 * 1024
 
 def get_clipboard():
     if sys.platform == 'darwin':
