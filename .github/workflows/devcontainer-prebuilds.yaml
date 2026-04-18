@@ -54,8 +54,8 @@ jobs:
       - name: Build and Push
         uses: docker/build-push-action@v5
         with:
-          context: .devcontainer
-          file: .devcontainer/Dockerfile
+          context: .devcontainer/devtools
+          file: .devcontainer/devtools/Dockerfile
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}

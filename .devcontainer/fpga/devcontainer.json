@@ -1,0 +1,37 @@
+{
+    "build": {
+        "context": ".",
+        "dockerfile": "./Dockerfile"
+    },
+    "containerUser": "developer",
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "ms-vscode.cpptools-extension-pack",
+                "ms-python.python"
+            ],
+            "settings": {
+                "editor.renderWhitespace": "all",
+                "files.insertFinalNewline": true,
+                "files.trimTrailingWhitespace": true
+            }
+        }
+    },
+    "features": {
+        "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {},
+        "ghcr.io/devcontainers/features/sshd:1": {}
+    },
+    "forwardPorts": [2222],
+    "hostRequirements": {
+        "cpus": 4,
+        "memory": "16gb",
+        "storage": "32gb" // Fine for FOSS tools; 8-16x this for Vivado
+    },
+    "mounts": [
+        "source=fpga-persist,target=/persist,type=volume"
+    ],
+    "onCreateCommand": "/usr/local/bin/on-create.sh || true",
+    "remoteUser": "developer",
+    "waitFor": "onCreateCommand",
+    "workspaceFolder": "/persist"
+}
