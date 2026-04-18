@@ -1,8 +1,8 @@
-# This .gitconfig can be included in your global configuration file, and you can
-# override any of these settings after the include:
+# This .gitconfig can be included in your global configuration file.
+# You can override any of these settings after the include.
 #
 # [include]
-#     path = /path/to/devtools/git/.gitconfig
+#     path = /path/to/devtools/git/gitconfig
 
 [alias]
     trail = log --oneline --decorate --stat --graph

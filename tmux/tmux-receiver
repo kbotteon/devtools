@@ -1,0 +1,93 @@
+#!/usr/bin/env python3
+"""
+A tmux clipboard receiver.
+
+Pairs with tmux-forwarder running on the remote host. Requires an SSH
+RemoteForward. See tmux.conf in this repo.
+
+Wire format: [4U8:TMXC][1U8:Version][U32:Length][U32:CRC32][xU8:Payload]
+"""
+import os
+import socket
+import struct
+import subprocess
+import sys
+import zlib
+
+PORT        = 50024
+MAGIC       = b'TMXC'
+VERSION     = 1
+HEADER      = '!4sBII'  # magic, version, length, crc32
+HEADER_SIZE = struct.calcsize(HEADER)
+MAX_PAYLOAD = 16 * 1024
+
+def get_clipboard():
+    if sys.platform == 'darwin':
+        return ['pbcopy']
+    if os.environ.get('WAYLAND_DISPLAY'):
+        return ['wl-copy']
+    if os.environ.get('DISPLAY'):
+        return ['xclip', '-selection', 'clipboard']
+    print("tmux-receiver: No clipboard backend found", file=sys.stderr)
+    sys.exit(1)
+
+def loop(cmd):
+    server_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    server_sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+
+    try:
+        server_sock.bind(('localhost', PORT))
+        server_sock.listen(1)
+        print(f"tmux-receiver: Listening on localhost:{PORT}...\nPress Ctrl+C to stop\n")
+
+        while True:
+            client_sock, _ = server_sock.accept()
+            try:
+                with client_sock.makefile('rb') as f:
+                    raw = f.read(HEADER_SIZE)
+                    if len(raw) != HEADER_SIZE:
+                        print("Error: Incomplete header", file=sys.stderr)
+                        continue
+
+                    magic, version, length, checksum = struct.unpack(HEADER, raw)
+
+                    if magic != MAGIC:
+                        print("Error: Invalid magic bytes", file=sys.stderr)
+                        continue
+                    if version != VERSION:
+                        print(f"Error: Unsupported version {version}", file=sys.stderr)
+                        continue
+                    if length > MAX_PAYLOAD:
+                        print(f"Error: Payload too large ({length} > {MAX_PAYLOAD})", file=sys.stderr)
+                        continue
+
+                    data = f.read(length)
+
+                if len(data) != length:
+                    print(f"Error: Incomplete payload ({len(data)}/{length} bytes)", file=sys.stderr)
+                    continue
+                if (zlib.crc32(data) & 0xFFFFFFFF) != checksum:
+                    print("Error: Checksum mismatch", file=sys.stderr)
+                    continue
+
+                subprocess.run(cmd, input=data, check=False)
+                print(f"RX: {length}")
+                sys.stdout.flush()
+
+            except Exception as e:
+                print(f"Error handling connection: {e}", file=sys.stderr)
+            finally:
+                client_sock.close()
+
+    except KeyboardInterrupt:
+        print("\nShutting down...")
+    except OSError as e:
+        print(f"Error binding to port {PORT}: {e}", file=sys.stderr)
+        print("Is another instance already running?", file=sys.stderr)
+        sys.exit(1)
+    finally:
+        server_sock.close()
+
+if __name__ == '__main__':
+    cmd = get_clipboard()
+    loop(cmd)
