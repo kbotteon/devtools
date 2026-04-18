@@ -53,6 +53,7 @@ jobs:
             latest=auto
             suffix=${{ inputs.tag_suffix }}
           tags: |
+            type=raw,value=latest
             type=sha,prefix={{branch}}-
 
       - name: Build and Push
