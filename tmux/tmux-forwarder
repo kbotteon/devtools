@@ -18,9 +18,10 @@ HEADER      = '!4sBII'  # magic, version, length, crc32
 MAX_PAYLOAD = 128 * 1024
 
 def error(msg):
-    print(msg, file=sys.stderr)
     if os.environ.get('TMUX'):
         subprocess.run(['tmux', 'display-message', '-d', '4000', msg], check=False)
+    else:
+        print(msg, file=sys.stderr)
 
 def send_clipboard(data):
     header = struct.pack(HEADER, MAGIC, VERSION, len(data), zlib.crc32(data) & 0xFFFFFFFF)
