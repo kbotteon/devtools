@@ -1,11 +1,11 @@
-name: Devcontainer Prebuilds
+name: Prebuild Base Variant
 
 on:
   push:
     branches:
       - main
     paths:
-      - '.devcontainer/**'
+      - '.devcontainer/base/**'
   workflow_dispatch:
     inputs:
       tag_suffix:
@@ -48,7 +48,6 @@ jobs:
             latest=auto
             suffix=${{ inputs.tag_suffix }}
           tags: |
-            type=raw,value=latest
             type=sha,prefix={{branch}}-
 
       - name: Build and Push
@@ -61,7 +60,6 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
-          provenance: false
 
   cleanup:
     needs: build
