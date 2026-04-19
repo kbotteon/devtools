@@ -3,7 +3,10 @@
 # \brief On-create setup to run as user specified in Dockerfile
 ################################################################################
 
-LV='/persist'
+mkdir -p /workspaces/.persist/home
+sudo chown -R $(whoami) /workspaces/.codespaces 2>/dev/null || true
+
+LV='/workspaces/.persist'
 
 WS="${LV}/sandboxes"
 PKG="${WS}/devtools"
@@ -15,8 +18,8 @@ USRBIN=${LV}/.local # For the configure/install prefix when building from source
 # Filesystem
 #-------------------------------------------------------------------------------
 
-# Set up the volume mount
-sudo chown -R $(whoami): /persist
+# Set up the bind mount
+sudo chown -R $(whoami): /workspaces/.persist
 mkdir -p ${WS}
 
 # Rebuilds will nest a new home skeleton, but we want to keep the existing one
@@ -33,10 +36,10 @@ else
 fi
 
 # A place to put local binaries and compiled libraries
-# Run 'ldconfig' after building with 'Prefix=/persist/.local'
+# Run 'ldconfig' after building with 'Prefix=/workspaces/.persist/.local'
 mkdir -p ${CPYBIN}
 mkdir -p ${USRBIN}
-printf "/persist/.local/lib\n" | sudo tee /etc/ld.so.conf.d/persist-local.conf > /dev/null
+printf "/workspaces/.persist/.local/lib\n" | sudo tee /etc/ld.so.conf.d/persist-local.conf > /dev/null
 
 # Remove unused default directories; create ones that might not exist
 rmdir ${HOME}/{Documents,Music,Pictures,Public,Templates,Videos} 2>/dev/null || true
@@ -71,7 +74,7 @@ ln -sfn ${WS}/devtools ${HOME}/devtools
 
 echo "
 [include]
-    path = ${PKG}/git/.gitconfig
+    path = ${PKG}/config/gitconfig
 " >> ${HOME}/.gitconfig
 
 #-------------------------------------------------------------------------------

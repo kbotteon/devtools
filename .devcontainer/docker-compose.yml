@@ -6,6 +6,7 @@ services:
       dockerfile: Dockerfile
       args:
         APT_PROXY: "http://host.docker.internal:3142"
+    user: developer
     command: sleep infinity
     cap_add:
       - SYS_PTRACE
@@ -16,8 +17,6 @@ services:
       - "50022:2222"
     security_opt:
       - seccomp:unconfined
-    volumes:
-      - devtools-persist:/persist
 
   devcontainer-gpu:
     extends:
@@ -31,7 +30,3 @@ services:
             - driver: nvidia
               count: all
               capabilities: [gpu]
-
-volumes:
-  devtools-persist:
-    name: devtools-persist

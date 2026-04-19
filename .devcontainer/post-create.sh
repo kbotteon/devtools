@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 ################################################################################
 # \brief Project-specific environment setup, run after image creation
-# \warning Do not run this as root from devcontainer.json; it self-invokes as root
+# \warning Do not run this as root from devcontainer.json; it can self-invokes
 ################################################################################
 
 # Set this if you want to self-invoke as root
@@ -11,3 +11,5 @@ RUN_AS_ROOT=0
 if [ "$EUID" -ne 0 ] && [ "$RUN_AS_ROOT" -ne 0 ]; then
   exec sudo /bin/bash "$(realpath "$0")" "$@"
 fi
+
+git config --global --add safe.directory /workspaces/devtools

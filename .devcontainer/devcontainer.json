@@ -26,16 +26,27 @@
         "storage": "16gb"
     },
     "onCreateCommand": "/usr/local/bin/on-create.sh || true",
+    "forwardPorts": [2222],
     "portsAttributes": {
         "2222": {
             "label": "sshd",
-            "onAutoForward": "ignore"
+            "onAutoForward": "silent",
+            "localPort": 50122
         }
+    },
+    "otherPortsAttributes": {
+        "onAutoForward": "ignore"
     },
     "postCreateCommand": "/usr/local/bin/post-create.sh || true",
     "remoteUser": "developer",
     "service": "devcontainer",
     "shutdownAction": "stopCompose",
     "waitFor": "onCreateCommand",
-    "workspaceFolder": "/persist"
+    "workspaceFolder": "/workspaces",
+    "containerEnv": {
+        "DOCKER_API_VERSION": "1.43"
+    },
+    "mounts": [
+        "source=${localWorkspaceFolder}/../.persist,target=/workspaces/.persist,type=bind"
+    ]
 }
