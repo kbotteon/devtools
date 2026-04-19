@@ -14,7 +14,7 @@ services:
     devices:
       - /dev/net/tun
     ports:
-      - "50022:2222"
+      - "50122:50122"
     security_opt:
       - seccomp:unconfined
 

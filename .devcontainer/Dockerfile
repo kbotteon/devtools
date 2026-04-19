@@ -40,6 +40,7 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
     make \
     net-tools \
     netcat-openbsd \
+    openssh-server \
     openjdk-21-jdk \
     pkg-config \
     portmap \
@@ -79,6 +80,11 @@ RUN useradd -m -d /workspaces/.persist/home -s /bin/zsh $USERNAME && \
     usermod -aG sudo $USERNAME && \
     echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers && \
     ln -s /workspaces/.persist/home /home/$USERNAME
+
+# Configure sshd on port 50122 and require key auth
+RUN sed -i 's/^#*Port .*/Port 50122/' /etc/ssh/sshd_config && \
+    sed -i 's/^#*PasswordAuthentication .*/PasswordAuthentication no/' /etc/ssh/sshd_config && \
+    mkdir -p /run/sshd
 
 # These are historically a raging pain to interact with via devcontainer.json,
 # so place them inside the container here and invoke elsewhere

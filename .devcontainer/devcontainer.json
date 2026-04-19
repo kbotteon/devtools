@@ -16,8 +16,7 @@
     "dockerComposeFile": "docker-compose.yml",
     "features": {
         "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {},
-        "ghcr.io/devcontainers/features/github-cli:1": {},
-        "ghcr.io/devcontainers/features/sshd:1": {}
+        "ghcr.io/devcontainers/features/github-cli:1": {}
     },
     "hostRequirements": {
         "cpus": 2,
@@ -26,17 +25,18 @@
         "storage": "16gb"
     },
     "onCreateCommand": "/usr/local/bin/on-create.sh || true",
-    "forwardPorts": [2222],
+    "forwardPorts": [50122],
     "portsAttributes": {
-        "2222": {
+        "50122": {
             "label": "sshd",
             "onAutoForward": "silent",
-            "localPort": 50122
+            "requireLocalPort": true
         }
     },
     "otherPortsAttributes": {
         "onAutoForward": "ignore"
     },
+    "postStartCommand": "sudo /usr/sbin/sshd",
     "postCreateCommand": "/usr/local/bin/post-create.sh || true",
     "remoteUser": "developer",
     "service": "devcontainer",
