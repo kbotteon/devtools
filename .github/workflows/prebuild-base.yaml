@@ -5,7 +5,8 @@ on:
     branches:
       - main
     paths:
-      - '.devcontainer/base/**'
+      - '.devcontainer/**'
+      - '!.devcontainer/fpga/**'
   workflow_dispatch:
     inputs:
       tag_suffix:
@@ -54,8 +55,8 @@ jobs:
       - name: Build and Push
         uses: docker/build-push-action@v7
         with:
-          context: .devcontainer/base
-          file: .devcontainer/base/Dockerfile
+          context: .devcontainer
+          file: .devcontainer/Dockerfile
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
