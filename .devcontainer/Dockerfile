@@ -14,7 +14,10 @@ RUN if [ -n "$APT_PROXY" ]; then \
       fi; \
     fi
 
-RUN dpkg --add-architecture i386
+RUN if [ "$(dpkg --print-architecture)" = "amd64" ]; then \
+        dpkg --add-architecture i386 && \
+        apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y gcc-multilib; \
+    fi
 
 # Force US mirrors
 RUN sed -i 's|http://archive.ubuntu.com|http://us.archive.ubuntu.com|g' /etc/apt/sources.list.d/ubuntu.sources
@@ -29,7 +32,6 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
     curl \
     docker-compose \
     gcc \
-    gcc-multilib \
     gdb \
     git \
     git-lfs \

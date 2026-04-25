@@ -4,6 +4,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      extra_hosts:
+        - "host.docker.internal:host-gateway"
       args:
         APT_PROXY: "http://host.docker.internal:3142"
     user: developer
@@ -15,6 +17,8 @@ services:
       - /dev/net/tun
     ports:
       - "50122:50122"
+    volumes:
+      - ..:/workspaces/devtools:cached
     security_opt:
       - seccomp:unconfined
 
