@@ -39,12 +39,14 @@ hgrep() {
     history | grep -i "$*"
 }
 
-# Run a command in all tmux panes
+# Run a command in all idle shell panes in the current window
 tmux-bcast() {
     local cmd=${1}
-    tmux list-panes -s -F '#{session_name}:#{window_index}.#{pane_index}' | \
-    while read -r pane; do
-        tmux send-keys -t "$pane" "${cmd}" C-m
+    tmux list-panes -F '#{pane_index} #{pane_current_command}' | \
+    while read -r idx pcmd; do
+        case "$pcmd" in
+            bash|zsh|sh|fish|ksh|dash) tmux send-keys -t ".${idx}" "${cmd}" C-m ;;
+        esac
     done
 }
 
