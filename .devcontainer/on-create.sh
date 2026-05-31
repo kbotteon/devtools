@@ -20,6 +20,7 @@ USRBIN=${LV}/.local # For the configure/install prefix when building from source
 
 # Set up the bind mount
 sudo chown -R $(whoami): /workspaces/.persist
+chmod 755 /workspaces/.persist
 chmod 755 ${HOME}
 mkdir -p ${WS}
 

@@ -76,9 +76,12 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
 
 # Make a non-root user and allow sudo without password
 # /workspaces/.persist is a bind mount provided by devcontainer.json
-# 'gh ssh' requires default home location, so symlink it
 RUN mkdir -p /workspaces/.persist
-RUN useradd -m -d /workspaces/.persist/home -s /bin/zsh $USERNAME && \
+
+# 'gh ssh' requires default home location, so symlink it
+# Also drop default user and grab UID 1000 for SSH
+RUN (userdel -r ubuntu 2>/dev/null || true) && \
+    useradd -m -d /workspaces/.persist/home -s /bin/zsh -u 1000 $USERNAME && \
     usermod -aG sudo $USERNAME && \
     echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers && \
     ln -s /workspaces/.persist/home /home/$USERNAME
