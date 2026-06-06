@@ -57,10 +57,16 @@ mkdir -p ${HOME}/.config/devtools
 touch ${HOME}/.config/devtools/history
 
 # Set default devtools config
+DTC_CFG="${HOME}/.config/devtools/config"
+
+if [[ -n "${CODESPACE_NAME}" ]]; then
+    echo "export DTC_FRIENDLY_NAME='${CODESPACE_NAME%-*}'" >> ${DTC_CFG}
+fi
+
 echo "
 export DTC_CLEAN_HISTORY=1
 source ${PKG}/shell/my.sh
-" >> ${HOME}/.config/devtools/config
+" >> ${DTC_CFG}
 
 # Source devtools in every shell
 echo "
