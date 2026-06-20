@@ -19,6 +19,7 @@ services:
       - "50122:50122"
     volumes:
       - ..:/workspaces/devtools:cached
+      - devtools-persist:/mnt/persist
     security_opt:
       - seccomp:unconfined
 
@@ -34,3 +35,6 @@ services:
             - driver: nvidia
               count: all
               capabilities: [gpu]
+
+volumes:
+  devtools-persist:

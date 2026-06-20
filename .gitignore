@@ -1,2 +1,3 @@
 .mounts
 .bin
+.devcontainer/.env

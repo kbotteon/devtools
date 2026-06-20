@@ -3,10 +3,20 @@
 # \brief On-create setup to run as user specified in Dockerfile
 ################################################################################
 
-mkdir -p /workspaces/.persist/home
+# In Codespaces, point /persist to workspaces, the only persistent storage
+# Avoid this locally because a Docker volume is faster than a host bind mount
+if [ -n "$CODESPACES" ]; then
+    mkdir -p /workspaces/.persist
+    sudo ln -sfn /workspaces/.persist /persist
+fi
+
+mkdir -p /persist/home
+if [ -z "$(ls -A /persist/home)" ]; then
+    cp -a /etc/skel/. /persist/home/
+fi
 sudo chown -R $(whoami) /workspaces/.codespaces 2>/dev/null || true
 
-LV='/workspaces/.persist'
+LV='/persist'
 
 WS="${LV}/sandboxes"
 PKG="${WS}/devtools"
@@ -18,9 +28,9 @@ USRBIN=${LV}/.local # For the configure/install prefix when building from source
 # Filesystem
 #-------------------------------------------------------------------------------
 
-# Set up the bind mount
-sudo chown -R $(whoami): /workspaces/.persist
-chmod 755 /workspaces/.persist
+# Set up the persist mount
+sudo chown -R $(whoami): /persist
+chmod 755 /persist
 chmod 755 ${HOME}
 mkdir -p ${WS}
 
@@ -38,10 +48,10 @@ else
 fi
 
 # A place to put local binaries and compiled libraries
-# Run 'ldconfig' after building with 'Prefix=/workspaces/.persist/.local'
+# Run 'ldconfig' after building with 'Prefix=/persist/.local'
 mkdir -p ${CPYBIN}
 mkdir -p ${USRBIN}
-printf "/workspaces/.persist/.local/lib\n" | sudo tee /etc/ld.so.conf.d/persist-local.conf > /dev/null
+printf "/persist/.local/lib\n" | sudo tee /etc/ld.so.conf.d/persist-local.conf > /dev/null
 
 # Remove unused default directories; create ones that might not exist
 rmdir ${HOME}/{Documents,Music,Pictures,Public,Templates,Videos} 2>/dev/null || true

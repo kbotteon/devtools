@@ -5,8 +5,9 @@ on:
     branches:
       - main
     paths:
-      - '.devcontainer/**'
-      - '!.devcontainer/fpga/**'
+      - '.devcontainer/Dockerfile'
+      - '.devcontainer/on-create.sh'
+      - '.devcontainer/post-create.sh'
   workflow_dispatch:
     inputs:
       tag_suffix:

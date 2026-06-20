@@ -1,5 +1,5 @@
 {
-    "name": "base",
+    "name": "gpu",
     "customizations": {
         "vscode": {
             "extensions": [
@@ -14,14 +14,14 @@
             ]
         }
     },
-    "dockerComposeFile": "docker-compose.yml",
+    "dockerComposeFile": "../docker-compose.yml",
     "features": {
         "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {},
         "ghcr.io/devcontainers/features/github-cli:1": {}
     },
     "hostRequirements": {
         "cpus": 2,
-        "gpu": "optional",
+        "gpu": true,
         "memory": "4gb",
         "storage": "16gb"
     },
@@ -40,14 +40,11 @@
     "postStartCommand": "sudo /usr/sbin/sshd",
     "postCreateCommand": "/usr/local/bin/post-create.sh || true",
     "remoteUser": "developer",
-    "service": "devcontainer",
+    "service": "devcontainer-gpu",
     "shutdownAction": "stopCompose",
     "waitFor": "onCreateCommand",
-    "workspaceFolder": "/workspaces",
+    "workspaceFolder": "/persist",
     "containerEnv": {
         "DOCKER_API_VERSION": "1.43"
-    },
-    "mounts": [
-        "source=${localWorkspaceFolder}/../.persist,target=/workspaces/.persist,type=bind"
-    ]
+    }
 }

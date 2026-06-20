@@ -24,18 +24,23 @@ RUN sed -i 's|http://archive.ubuntu.com|http://us.archive.ubuntu.com|g' /etc/apt
 
 # Install build and development tools
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
+    autoconf \
+    bison \
     build-essential \
     bzip2 \
+    ccache \
     clang \
     clang-format \
     cmake \
     curl \
     docker-compose \
+    flex \
     gcc \
     gdb \
     git \
     git-lfs \
     gzip \
+    help2man \
     libtool \
     less \
     llvm \
@@ -44,6 +49,7 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
     netcat-openbsd \
     openssh-server \
     openjdk-21-jdk \
+    perl \
     pkg-config \
     portmap \
     python3 \
@@ -91,17 +97,36 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
     xfce4-terminal \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Make a non-root user and allow sudo without password
-# /workspaces/.persist is a bind mount provided by devcontainer.json
-RUN mkdir -p /workspaces/.persist
+# FPGA tools
+RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+    ghdl \
+    gtkwave \
+    libfl-dev \
+    libfl2 \
+    libgoogle-perftools-dev \
+    zlib1g-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+# Build and install Verilator from source
+RUN git clone --recursive -b v5.042 https://github.com/verilator/verilator /usr/local/src/verilator \
+    && cd /usr/local/src/verilator \
+    && autoconf \
+    && ./configure --prefix=/usr/local \
+    && make -j$(nproc) \
+    && make install
+
+# Set up persistent storage for future bind or volume mount, depending on host
+RUN mkdir -p /mnt/persist && \
+    ln -s /mnt/persist /persist
 
 # 'gh ssh' requires default home location, so symlink it
+# Make a non-root user and allow sudo without password
 # Also drop default user and grab UID 1000 for SSH
 RUN (userdel -r ubuntu 2>/dev/null || true) && \
-    useradd -m -d /workspaces/.persist/home -s /bin/zsh -u 1000 $USERNAME && \
+    useradd -m -d /persist/home -s /bin/zsh -u 1000 $USERNAME && \
     usermod -aG sudo $USERNAME && \
     echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers && \
-    ln -s /workspaces/.persist/home /home/$USERNAME
+    ln -s /persist/home /home/$USERNAME
 
 # Configure sshd on port 50122 and require key auth
 RUN sed -i 's/^#*Port .*/Port 50122/' /etc/ssh/sshd_config && \
