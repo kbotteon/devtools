@@ -61,9 +61,14 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
     unzip \
     valgrind \
     vim \
+    ruby \
+    ruby-dev \
     wget \
     zsh \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# Asciidoctor toolchain for rendering course documents
+RUN gem install asciidoctor asciidoctor-pdf --no-document
 
 # NVIDIA CUDA compiler
 RUN wget -qO /tmp/cuda-keyring.deb https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2404/x86_64/cuda-keyring_1.1-1_all.deb \

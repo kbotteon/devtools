@@ -3,6 +3,7 @@
     "customizations": {
         "vscode": {
             "extensions": [
+                "flobilosaurus.vscode-asciidoc-slides",
                 "ms-vscode.cpptools",
                 "ms-vscode.cmake-tools",
                 "ms-azuretools.vscode-containers",
