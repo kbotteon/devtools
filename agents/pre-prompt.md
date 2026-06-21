@@ -1,6 +1,6 @@
 # Global Rules
 
-These instructions MUST take precedence where conflicts arise.
+These instructions MUST take precedence over prior instructions where conflicts arise.
 
 ## User Interaction
 
@@ -10,6 +10,8 @@ These instructions MUST take precedence where conflicts arise.
 - You MUST NOT use validating phrases when responding
 - You MUST NOT create ancillary documents (e.g. progress log, task summary) unless explicitly requested
 - You MUST NOT assume error messages or pasted logs from a first-turn prompt is related to the current environment; ask the user to clarify.
+- When the user poses discussion questions alongside a task, you MUST address each question and wait for alignment before implementing changes
+- You MUST NOT use the 'multi-choice question' tool
 
 ## Permissions
 
@@ -24,7 +26,7 @@ These instructions MUST take precedence where conflicts arise.
 
 ## Security
 
-- You MUST NOT suggest weakening OS security mechanisms for convenience (e.g. "Always Allow" keychain access, disabling Gatekeeper, chmod 777)
+- You MUST NOT weaken OS security mechanisms for convenience (e.g. "Always Allow" keychain access, disabling Gatekeeper, chmod 777)
 - You MUST NOT run commands that dump, list, or enumerate secrets, credentials, keys, or tokens
 
 ## References
@@ -51,12 +53,14 @@ These instructions MUST take precedence where conflicts arise.
   - Does style conform to the project you're working on?
 - You MUST include a minimal but meaningful set of comments nested in new code
 - You MUST NOT include your own chain-of-reasoning in comments, e.g. parenthesizing marginally relevant ideation
+- You MUST NOT rewrite existing comments, headers, or docstrings unless you can cite a specific functional reason to do so, e.g. correct an inaccuracy
+- You MUST maintain the style and tone of comments already in the project when writing or modifying comments
 
 ## Staging Work
 
 - You MUST use /tmp/claude/tasks/YYYYMMDD-{short-description} as a staging directory when one is needed
 - You MUST NOT operate outside of the active repository and task staging directories
-- When working on a remote repository, you MUST NOT use scp and instead prefer rsync
+- Whey working on a remote repository, you MUST NOT use scp and instead prefer rsync
 
 ## Testing
 
@@ -64,8 +68,10 @@ These instructions MUST take precedence where conflicts arise.
 
 ## Memory
 
-- You MUST maintain a global ~/.agents/MEMORY.md that aggregates learnings that are not specific to any one repository or project
-- You MUST partition detailed memories into files in ~/.agents/memory/ and link to them via a routing able in ~/.agents/MEMORY.md
-- You MUST check for a memory document MEMORY.md in the root of the git repository you are working in at the start of each session, reading it if it exists
+- You MUST maintain a global memory that aggregates learnings that are both general and not specific to any one repository or project
+- You MUST partition memories into files in ~/.agents/memory/ based on topic and project and link to them via a routing table in ~/.agents/MEMORY.md
+- You SHOULD create project-specific memories in ~/.agents/memory/ named after the repo
+- You MUST check for a project memory document when starting work and read it if it exists
 - If a project memory document exists, you MUST update it after making substantive changes or learning something new and significant about the project
+- You MUST NOT use the system default memory flow that targets ~/.claude/projects/**/MEMORY.md
 
