@@ -3,19 +3,7 @@
 # \brief On-create setup to run as user specified in Dockerfile
 ################################################################################
 
-# In Codespaces, point /persist to workspaces, the only persistent storage
-# Avoid this locally because a Docker volume is faster than a host bind mount
-if [ -n "$CODESPACES" ]; then
-    mkdir -p /workspaces/.persist
-    sudo ln -sfn /workspaces/.persist /persist
-fi
-
-mkdir -p /persist/home
-if [ -z "$(ls -A /persist/home)" ]; then
-    cp -a /etc/skel/. /persist/home/
-fi
-sudo chown -R $(whoami) /workspaces/.codespaces 2>/dev/null || true
-
+# This is a bind-mount to /workspaces in Codespaces or a Docker volume locally
 LV='/persist'
 
 WS="${LV}/sandboxes"
@@ -28,13 +16,21 @@ USRBIN=${LV}/.local # For the configure/install prefix when building from source
 # Filesystem
 #-------------------------------------------------------------------------------
 
-# Set up the persist mount
-sudo chown -R $(whoami): /persist
-chmod 755 /persist
-chmod 755 ${HOME}
-mkdir -p ${WS}
+# In Codespaces, point /persist to workspaces, the only persistent storage
+# Avoid this locally because a Docker volume is faster than a host bind mount
+if [ -n "$CODESPACES" ]; then
+    echo "Creating bind mount: /persist -> /workspaces/.persist"
+    mkdir -p /workspaces/.persist
+    # Passwordless sudo granted in Dockerfile
+    sudo ln -sfn /workspaces/.persist /persist
+fi
 
-# Rebuilds will nest a new home skeleton, but we want to keep the existing one
+# Set up the persistent mount
+sudo chown -R $(whoami): ${LV}
+chmod 755 ${LV}
+chmod 755 ${HOME}
+
+# Rebuilds will nest a new home skeleton; clean it up
 if [ -d "${HOME}/home" ]; then
     rm -rf "${HOME}/home"
 fi
@@ -115,7 +111,7 @@ curl -o /tmp/firefox.tar.xz https://download-installer.cdn.mozilla.net/pub/firef
 
 # Speedtest
 curl -fsSL https://install.speedtest.net/app/cli/ookla-speedtest-1.2.0-linux-x86_64.tgz \
-    | tar -xz -C ${CPYBIN}/bin speedtest
+    | tar -xz -C ${CPYBIN} speedtest
 
 #-------------------------------------------------------------------------------
 # SSH
