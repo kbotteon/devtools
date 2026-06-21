@@ -76,15 +76,19 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
 # Asciidoctor toolchain for rendering course documents
 RUN gem install asciidoctor asciidoctor-pdf --no-document
 
-# NVIDIA CUDA compiler
-RUN wget -qO /tmp/cuda-keyring.deb https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2404/x86_64/cuda-keyring_1.1-1_all.deb \
-    && dpkg -i /tmp/cuda-keyring.deb \
-    && rm /tmp/cuda-keyring.deb \
-    && apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
-        cuda-nvcc-13-2 \
-        cuda-cudart-dev-13-2 \
-        cuda-profiler-api-13-2 \
-    && apt-get clean && rm -rf /var/lib/apt/lists/*
+# NVIDIA CUDA compiler on x86 hosts
+RUN if [ "$(dpkg --print-architecture)" = "amd64" ]; then \
+        wget -qO /tmp/cuda-keyring.deb https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2404/x86_64/cuda-keyring_1.1-1_all.deb \
+        && dpkg -i /tmp/cuda-keyring.deb \
+        && rm /tmp/cuda-keyring.deb \
+        && apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
+            cuda-nvcc-13-2 \
+            cuda-cudart-dev-13-2 \
+            cuda-profiler-api-13-2 \
+        && apt-get clean && rm -rf /var/lib/apt/lists/*; \
+    else \
+        echo "NOTE: CUDA packages skipped on $(dpkg --print-architecture)"; \
+    fi
 
 ENV PATH="/usr/local/cuda-13.2/bin:${PATH}"
 
