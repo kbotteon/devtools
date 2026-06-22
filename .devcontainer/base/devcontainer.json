@@ -14,11 +14,7 @@
             ]
         }
     },
-    "dockerComposeFile": "docker-compose.yml",
-    "features": {
-        "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {},
-        "ghcr.io/devcontainers/features/github-cli:1": {}
-    },
+    "dockerComposeFile": "../docker-compose.yml",
     "hostRequirements": {
         "cpus": 2,
         "gpu": "optional",
@@ -37,8 +33,6 @@
     "otherPortsAttributes": {
         "onAutoForward": "ignore"
     },
-    "postStartCommand": "sudo /usr/sbin/sshd",
-    "postCreateCommand": "/usr/local/bin/post-create.sh || true",
     "remoteUser": "developer",
     "service": "devcontainer",
     "shutdownAction": "stopCompose",

@@ -33,7 +33,7 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
     clang-format \
     cmake \
     curl \
-    docker-compose \
+    docker.io \
     flex \
     gcc \
     gdb \
@@ -128,17 +128,19 @@ RUN mkdir -p /mnt/persist && \
 # Also drop default user and grab UID 1000 for SSH
 RUN (userdel -r ubuntu 2>/dev/null || true) && \
     useradd -m -d /persist/home -s /bin/zsh -u 1000 $USERNAME && \
-    usermod -aG sudo $USERNAME && \
+    usermod -aG sudo,docker $USERNAME && \
     echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers && \
-    ln -s /persist/home /home/$USERNAME
+    ln -s /persist/home /home/$USERNAME && \
+    chown $USERNAME:$USERNAME /mnt/persist
 
-# Configure sshd on port 50122 and require key auth
-RUN sed -i 's/^#*Port .*/Port 50122/' /etc/ssh/sshd_config && \
+# Configure sshd on port 50022 and require key auth
+RUN sed -i 's/^#*Port .*/Port 50022/' /etc/ssh/sshd_config && \
     sed -i 's/^#*PasswordAuthentication .*/PasswordAuthentication no/' /etc/ssh/sshd_config && \
-    mkdir -p /run/sshd
+    mkdir -p /run/sshd && \
+    ssh-keygen -A
 
 # These are historically a raging pain to interact with via devcontainer.json,
 # so place them inside the container here and invoke elsewhere
-COPY --chmod=755 on-create.sh post-create.sh /usr/local/bin/
+COPY --chmod=755 on-create.sh /usr/local/bin/
 
 USER $USERNAME

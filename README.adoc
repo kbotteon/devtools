@@ -1,1 +1,18 @@
 = Development Tools and Environment
+
+When deploying via CodeSpaces, select "New with options..." to choose the base profile, since GPUs are not available.
+
+When deploying locally, the Devcontainer extension cannot locate profiles, so launch yourself:
+
+```
+docker compose --profile gpu up devcontainer-gpu
+```
+
+Optionally, run with '--host' or configure a Docker context to deploy to your home server(s) if applicable.
+
+Then run setup inside the container:
+
+```
+/usr/local/bin/on-create.sh
+```
+

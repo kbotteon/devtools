@@ -44,7 +44,7 @@ setup_persist() {
     fi
 
     sudo chown -R "$(whoami):" "${LV}"
-    chmod 755 "${LV}"
+    sudo chmod 755 "${LV}"
 
     # On first run with a fresh Docker volume, HOME won't exist yet
     if [ ! -d "${HOME}" ]; then
@@ -106,6 +106,13 @@ setup_git() {
     if ! grep -qF 'devtools/config/gitconfig' "${HOME}/.gitconfig" 2>/dev/null; then
         printf '\n[include]\n    path = %s/config/gitconfig\n' "${PKG}" >> "${HOME}/.gitconfig"
     fi
+    git config --global --add safe.directory /workspaces/devtools
+}
+
+setup_venv() {
+    [ -f "${PKG}/requirements.txt" ] || return 0
+    python3 -m venv "${LV}/.venv"
+    "${LV}/.venv/bin/pip" install -r "${PKG}/requirements.txt"
 }
 
 setup_vnc() {
@@ -182,6 +189,7 @@ run_step "Browser"            setup_browser "139.0.4"
 run_step "Speedtest"          setup_speedtest
 run_step "SSH"                setup_ssh
 run_step "Preferences"        setup_prefs
+run_step "Python venv"        setup_venv
 
 log "DEVTOOLS: Completed on-create.sh"
 

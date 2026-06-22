@@ -9,7 +9,7 @@ services:
       args:
         APT_PROXY: "http://host.docker.internal:3142"
     user: developer
-    command: sleep infinity
+    command: bash -c "sudo /usr/sbin/sshd; sleep infinity"
     cap_add:
       - SYS_PTRACE
       - NET_ADMIN
@@ -18,8 +18,8 @@ services:
     ports:
       - "50122:50122"
     volumes:
-      - ..:/workspaces/devtools:cached
-      - devtools-persist:/mnt/persist
+      - /var/run/docker.sock:/var/run/docker.sock
+      - persist:/mnt/persist
     security_opt:
       - seccomp:unconfined
 
@@ -37,4 +37,5 @@ services:
               capabilities: [gpu]
 
 volumes:
-  devtools-persist:
+  persist:
+    name: devtools-persist
