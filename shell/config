@@ -1,11 +1,8 @@
-# Example devtools configuration for zsh
+# Example devtools config for zsh
 
-# Symlinked into home directory
-export DTC_EXISTS="${HOME}/devtools"
-
-# Shell preferences
-export DTC_SHARE_HISTORY=0
+# Preferences
 export DTC_CLEAN_HISTORY=1
+export DTC_SHARE_HISTORY=0
 export DTC_RUN_LOGIN=1
 export DTC_HISTSIZE=1000
 export DTC_PREFER_HOMEBREW=1
@@ -15,5 +12,8 @@ unset DTC_XILINX_LICENSE_PATH
 unset DTC_XILINX_ROOT
 unset DTC_XILINX_VERSION
 
-# Accept everything in the default my.sh
+# Source the tools
+source ${HOME}/devtools/shell/develop.zsh
+
+# Then accept everything in the default my.sh
 source ${DTC_EXISTS}/shell/my.sh

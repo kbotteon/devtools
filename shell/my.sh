@@ -39,6 +39,9 @@ hgrep() {
     history | grep -i "$*"
 }
 
+# Git helpers
+alias squash='git commit --amend --no-edit'
+
 # Run a command in all idle shell panes in the current window
 tmux-bcast() {
     local cmd=${1}

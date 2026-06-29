@@ -20,11 +20,6 @@ START_DIR=$(pwd)
 SCRIPT_DIR=$(dirname "$(readlink -f "${(%):-%x}")")
 CFG_DIR=${HOME}/.config/devtools
 
-# Source the user's host-specific configuration, if it exists
-if [[ -f "${CFG_DIR}/config" ]]; then
-    source "${CFG_DIR}/config"
-fi
-
 # Optional first argument, e.g. '-k' for SSH keys
 SCRIPT_ARG1=${1:+${1:l}}
 
@@ -134,9 +129,11 @@ fi
 # Run login scripts in ${HOME}/.login, if it's a login shell
 if [[ -n ${DTC_RUN_LOGIN} ]]; then
     if [[ -o login ]] || [[ -n $PS1 ]]; then
-        for SCRIPT in ${CFG_DIR}/login/*; do
-            [ -f "${SCRIPT}" ] && [ -x "${SCRIPT}" ] && "${SCRIPT}"
-        done
+        if [[ -d ${CFG_DIR}/login ]]; then
+            for SCRIPT in ${CFG_DIR}/login/*(N); do
+                [ -f "${SCRIPT}" ] && [ -x "${SCRIPT}" ] && "${SCRIPT}"
+            done
+        fi
     fi
 fi
 

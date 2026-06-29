@@ -82,23 +82,26 @@ setup_devtools() {
 
 setup_shell() {
 
-    mkdir -p "${DTC}"
-    CFG="${DTC}/config"
-    touch ${CFG}
+    # History file and login scripts live under the devtools config dir
+    mkdir -p "${DTC}/login"
     touch "${DTC}/history"
 
-    # Set up a default devtools config
-    if ! grep -qF 'DTC_CLEAN_HISTORY' "${DTC}" 2>/dev/null; then
-        echo "export DTC_CLEAN_HISTORY=1" >> "${CFG}"
-        echo "source ${PKG}/shell/my.sh" >> "${CFG}"
-    fi
+    # Seed the login dir with the default scripts
+    cp -n "${PKG}"/shell/login/* "${DTC}/login/" 2>/dev/null
 
-    if [ -n "${CODESPACE_NAME:-}" ]; then
-        echo "export DTC_FRIENDLY_NAME='${CODESPACE_NAME%-*}'" >> "${CFG}"
-    fi
-
+    # Write the devtools stanza into .zshrc if not already present
     if ! grep -qF 'develop.zsh' "${HOME}/.zshrc" 2>/dev/null; then
-        printf '\nsource %s/shell/develop.zsh\n' "${PKG}" >> "${HOME}/.zshrc"
+        cat >> "${HOME}/.zshrc" <<EOF
+
+# Devtools
+export DTC_FRIENDLY_NAME='${CODESPACE_NAME:-$(hostname)}'
+export DTC_CLEAN_HISTORY=1
+export DTC_SHARE_HISTORY=0
+export DTC_RUN_LOGIN=1
+export DTC_HISTSIZE=1000
+source ${PKG}/shell/develop.zsh
+source \${DTC_EXISTS}/shell/my.sh
+EOF
     fi
 }
 

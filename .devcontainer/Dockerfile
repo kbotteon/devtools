@@ -64,6 +64,7 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
     sudo \
     tcpdump \
     tmux \
+    unison \
     unzip \
     valgrind \
     vim \
