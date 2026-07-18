@@ -19,6 +19,10 @@ CONFIG = DtTmfConfig()
 
 
 def get_clipboard():
+    # Support environments without *DISPLAY
+    override = os.environ.get("DEVTOOLS_TMUX_CLIPBOARD")
+    if override:
+        return override.split()
     if sys.platform == "darwin":
         return ["pbcopy"]
     if os.environ.get("WAYLAND_DISPLAY"):
@@ -114,6 +118,7 @@ def loop(cmd):
         sys.exit(1)
     finally:
         server_sock.close()
+
 
 if __name__ == "__main__":
     cmd = get_clipboard()

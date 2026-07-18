@@ -83,18 +83,19 @@ def wait_for_port(port, timeout=5):
     return False
 
 
-def _test_env(env=None):
-    """Build an env dict for test subprocesses"""
-    if env is None:
-        env = os.environ.copy()
+def _test_env(clipboard="true"):
+    """Build an env dict for test subprocesses with default clipboard of /usr/bin/true"""
+    env = os.environ.copy()
     env["DEVTOOLS_TMUX_PORT"] = str(TEST_PORT)
+    env["DEVTOOLS_TMUX_CLIPBOARD"] = clipboard
     env.pop("TMUX", None)
     return env
 
 
 def start_receiver(env=None):
     """Start tmux-receiver on TEST_PORT and wait till it's listening"""
-    env = _test_env(env)
+    if env is None:
+        env = _test_env()
     proc = subprocess.Popen(
         [sys.executable, RECEIVER],
         stdout=subprocess.PIPE,
@@ -114,8 +115,8 @@ def stop_receiver(proc):
     except subprocess.TimeoutExpired:
         proc.kill()
         proc.wait()
-    stdout = proc.stdout.read().decode()
-    stderr = proc.stderr.read().decode()
+    stdout = proc.stdout.read().decode(errors="replace")
+    stderr = proc.stderr.read().decode(errors="replace")
     proc.stdout.close()
     proc.stderr.close()
     return stdout, stderr
@@ -174,39 +175,17 @@ class TestProtocolResponses(unittest.TestCase):
 
 
 class TestClipboardFailure(unittest.TestCase):
-    """Verify the receiver returns Response.CLIPERR when remote fails to copy"""
+    """Verify the receiver returns CLIPERR when the clipboard command fails"""
 
     def test_clipboard_command_fails(self):
-        # Determine the clipboard command the receiver will resolve
-        if sys.platform == "darwin":
-            cmd_name = "pbcopy"
-        elif os.environ.get("WAYLAND_DISPLAY"):
-            cmd_name = "wl-copy"
-        elif os.environ.get("DISPLAY"):
-            cmd_name = "xclip"
-        else:
-            self.skipTest("No clipboard backend detected")
-
-        # Fake a remote clipboard that exits nonzero
-        with tempfile.TemporaryDirectory() as tmpdir:
-            fake_cmd = os.path.join(tmpdir, cmd_name)
-            with open(fake_cmd, "w") as f:
-                f.write("#!/bin/sh\nexit 1\n")
-            os.chmod(fake_cmd, 0o755)
-
-            env = os.environ.copy()
-            env["PATH"] = tmpdir + ":" + env.get("PATH", "")
-
-            receiver = start_receiver(env=env)
-            try:
-                resp = send_raw(pack_valid(b"should fail clipboard"))
-                self.assertEqual(resp, DtTmfResponse.CLIPERR)
-            finally:
-                stdout, stderr = stop_receiver(receiver)
-                if stderr.strip():
-                    print(
-                        f"\nReceiver stderr:\n{stderr.strip()}", file=sys.stderr
-                    )
+        receiver = start_receiver(env=_test_env(clipboard="false"))
+        try:
+            resp = send_raw(pack_valid(b"should fail clipboard"))
+            self.assertEqual(resp, DtTmfResponse.CLIPERR)
+        finally:
+            stdout, stderr = stop_receiver(receiver)
+            if stderr.strip():
+                print(f"\nReceiver stderr:\n{stderr.strip()}", file=sys.stderr)
 
 
 class TestForwarderEndToEnd(unittest.TestCase):
@@ -258,19 +237,33 @@ class TestForwarderEndToEnd(unittest.TestCase):
         )
         self.assertEqual(result.returncode, 0)
 
-    # Mac usage is the common case so test it specifically
-    @unittest.skipUnless(sys.platform == "darwin", "pbpaste only on macOS")
-    def test_forwarder_updates_clipboard(self):
-        payload = b"e2e clipboard check"
-        subprocess.run(
-            [sys.executable, FORWARDER],
-            input=payload,
-            capture_output=True,
-            timeout=5,
-            env=self._forwarder_env(),
-        )
-        clip = subprocess.run(["pbpaste"], capture_output=True, timeout=2)
-        self.assertEqual(clip.stdout, payload)
+
+class TestForwarderPayload(unittest.TestCase):
+    """Verify the exact payload bytes reach the clipboard command"""
+
+    def test_forwarder_payload_arrives(self):
+        with tempfile.NamedTemporaryFile(delete=False, suffix=".clip") as tmp:
+            clip_file = tmp.name
+
+        try:
+            receiver = start_receiver(env=_test_env(clipboard=f"tee {clip_file}"))
+            try:
+                result = subprocess.run(
+                    [sys.executable, FORWARDER],
+                    input=b"e2e clipboard check",
+                    capture_output=True,
+                    timeout=5,
+                    env=_test_env(clipboard=f"tee {clip_file}"),
+                )
+                self.assertEqual(result.returncode, 0)
+            finally:
+                stop_receiver(receiver)
+
+            with open(clip_file, "rb") as f:
+                self.assertEqual(f.read(), b"e2e clipboard check")
+        finally:
+            if os.path.exists(clip_file):
+                os.unlink(clip_file)
 
 
 # ------------------------------------------------------------------------------
