@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """
 A tmux clipboard forwarder. Pair this with tmux-receiver.
-
-Wire format: [4U8:TMXC][1U8:Version][U32:Length][U32:CRC32][xU8:Payload]
+See protocol.py for wire format and response codes.
 """
+
 import os
 import subprocess
 import sys
@@ -11,43 +11,64 @@ import socket
 import struct
 import zlib
 
-PORT        = 50024
-MAGIC       = b'TMXC'
-VERSION     = 1
-HEADER      = '!4sBII'  # magic, version, length, crc32
-MAX_PAYLOAD = 128 * 1024
+from protocol import DtTmfConfig, DtTmfResponse
 
-def error(msg):
-    if os.environ.get('TMUX'):
-        subprocess.run(['tmux', 'display-message', '-d', '4000', msg], check=False)
+CONFIG = DtTmfConfig()
+
+
+def notify(msg, duration=4000):
+    """Print a message to the tmux status bar"""
+    if os.environ.get("TMUX"):
+        subprocess.run(
+            ["tmux", "display-message", "-d", str(duration), msg], check=False
+        )
     else:
         print(msg, file=sys.stderr)
 
+
 def send_clipboard(data):
-    header = struct.pack(HEADER, MAGIC, VERSION, len(data), zlib.crc32(data) & 0xFFFFFFFF)
+    header = struct.pack(
+        CONFIG.STRF, CONFIG.MAGIC, CONFIG.VERS, len(data), zlib.crc32(data) & 0xFFFFFFFF
+    )
     try:
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
             sock.settimeout(2)
-            sock.connect(('localhost', PORT))
+            sock.connect(("localhost", CONFIG.PORT))
             sock.sendall(header + data)
+            sock.shutdown(socket.SHUT_WR)
+
+            resp = sock.recv(1)
+            if resp and resp[0] == DtTmfResponse.REJECTED:
+                notify("tmux-forwarder: Receiver rejected payload")
+                sys.exit(1)
+            elif resp and resp[0] == DtTmfResponse.CLIPERR:
+                notify("tmux-forwarder: Clipboard write failed")
+                sys.exit(1)
+            else:
+                notify(f"tmux-forwarder: Transferred {len(data)} bytes", duration=2000)
 
     except socket.timeout:
-        error("tmux-forwarder: Connection timeout. Is tmux-receiver running?")
+        notify("tmux-forwarder: Connection timeout. Is tmux-receiver running?")
         sys.exit(1)
 
     except ConnectionRefusedError:
-        error("tmux-forwarder: Connection refused. Is RemoteForward tunnel open?")
+        notify("tmux-forwarder: Connection refused. Is RemoteForward tunnel open?")
         sys.exit(1)
 
     except Exception as e:
-        error(f"tmux-forwarder: Error: {e}")
+        notify(f"tmux-forwarder: Error: {e}")
         sys.exit(1)
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
+    """Entry point for tmux to invoke via binding"""
+
     data = sys.stdin.buffer.read()
+
     if not data:
         sys.exit(0)
-    if len(data) > MAX_PAYLOAD:
-        error(f"tmux-forwarder: Payload too large ({len(data)} > {MAX_PAYLOAD})")
+    if len(data) > CONFIG.PMAX:
+        notify(f"tmux-forwarder: Payload {len(data)} too large")
         sys.exit(1)
+
     send_clipboard(data)
