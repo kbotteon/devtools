@@ -48,7 +48,11 @@ export LS_COLORS="${LS_COLORS:+${LS_COLORS}:}di=38;5;27:ln=01;38;5;37"
 
 : ${DTC_FRIENDLY_NAME:=%m}
 PS1_DECORATOR=${DTC_PS1_DECORATOR:-"└──>"}
+
+# All the various competing Python env tools overwrite your shell prompt in
+# in their own unique way... turn that off so we can compose our own
 export VIRTUAL_ENV_DISABLE_PROMPT=1
+export CONDA_CHANGEPS1=1
 
 # Locate git-prompt.sh for branch/tag display
 if command -v brew &>/dev/null; then
@@ -72,14 +76,17 @@ get_context() {
     if command -v __git_ps1 &>/dev/null; then
         local git_info="$(__git_ps1 '%s')"
         if [[ "$git_info" == \(*\) ]]; then
-            ctx+="[:${git_info//[()]/}]"
+            ctx+="[:${git_info//[()]/}] "
         elif [[ -n "$git_info" ]]; then
-            ctx+="[${git_info}]"
+            ctx+="[${git_info}] "
         fi
     fi
     # Python venv, if active
     if [[ -n "${VIRTUAL_ENV:-}" ]]; then
-        ctx+=" ($(basename "$VIRTUAL_ENV"))"
+        ctx+="(venv:$(basename "$VIRTUAL_ENV")) "
+    fi
+    if [[ -n "${CONDA_DEFAULT_ENV:-}" ]]; then
+        ctx+="(conda:${CONDA_DEFAULT_ENV}) "
     fi
     if [[ -n "$ctx" ]]; then
         printf '%s%s%s' "${CLR_CTX}" "${ctx}" "${CLR_RST}"
