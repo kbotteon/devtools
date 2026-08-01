@@ -83,10 +83,10 @@ get_context() {
     fi
     # Python venv, if active
     if [[ -n "${VIRTUAL_ENV:-}" ]]; then
-        ctx+="(venv:$(basename "$VIRTUAL_ENV")) "
+        ctx+="($(basename "$VIRTUAL_ENV")) "
     fi
     if [[ -n "${CONDA_DEFAULT_ENV:-}" ]]; then
-        ctx+="(conda:${CONDA_DEFAULT_ENV}) "
+        ctx+="(${CONDA_DEFAULT_ENV}) "
     fi
     if [[ -n "$ctx" ]]; then
         printf '%s%s%s' "${CLR_CTX}" "${ctx}" "${CLR_RST}"
