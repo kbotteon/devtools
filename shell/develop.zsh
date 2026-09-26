@@ -88,6 +88,10 @@ get_context() {
     if [[ -n "${CONDA_DEFAULT_ENV:-}" ]]; then
         ctx+="(${CONDA_DEFAULT_ENV}) "
     fi
+    # Directory stack depth, if any dirs are pushed
+    if (( ${#dirstack} > 0 )); then
+        ctx+="{${#dirstack}} "
+    fi
     if [[ -n "$ctx" ]]; then
         printf '%s%s%s' "${CLR_CTX}" "${ctx}" "${CLR_RST}"
     fi
